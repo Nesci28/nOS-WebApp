@@ -120,9 +120,7 @@
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
-                </v-menu>
-            <!-- <v-btn flat color="white" class="span-text">Edit Coins</v-btn> -->
-                <span class="white--text seenText">Last time seen : {{ rigSeen[rig - 1] }}</span>
+                </v-menu>                       
             </div>
           </div>
         </v-card>
@@ -206,9 +204,6 @@ export default {
 </script>
 
 <style>
-.seenText{
-  top: -2000px;
-}
 .roundImg{
   border-radius: 50%;
 }
