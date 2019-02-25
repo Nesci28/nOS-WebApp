@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
+    "dns": "^0.2.2",
+    "material-design-icons-iconfont": "^4.0.5",
+    "nodemailer": "^5.1.1",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",

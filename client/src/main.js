@@ -1,9 +1,10 @@
-import '@babel/polyfill'
+import '@babel/polyfill';
 import Vue from 'vue';
-import './plugins/vuetify'
+import './plugins/vuetify';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.config.productionTip = false;
 
