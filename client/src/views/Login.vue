@@ -2,7 +2,9 @@
   <v-app>
     <div class="background">
 
-      <div class="login-box">
+      <h1 class="white--text centerTitle">Use the login information you configured your rigs with</h1>
+
+      <div class="login-box pt-5">
         <h3 @click="example" class="hidden-sm-and-down exampleVertical">View an Example</h3>
         <h1>Login</h1>
 
@@ -54,6 +56,9 @@ export default {
 </script>
 
 <style>
+.centerTitle{
+  text-align: center;
+}
 .exampleHorizontal{
   position: absolute;
   width: 12%;
@@ -77,8 +82,9 @@ export default {
   text-align: center;
   cursor: pointer;
   margin: 15px 0;
-  height: 92.5%;
+  height: 80%;
   left: -15%;
+  top: 13%;
   writing-mode: vertical-lr;
 }
 .background{
@@ -91,7 +97,7 @@ export default {
 }
 .login-box{
   width: 40%;
-  top: 18%;
+  top: 25%;
   position: absolute;
   left: 50%;
   transform: translate(-50%,-50%);
@@ -116,6 +122,10 @@ export default {
   width: 26px;
   float: left;
   text-align: center;
+}
+.t.centerText{
+  text-align: center;
+  text-decoration: underline;
 }
 .textbox input{
   border: none;
