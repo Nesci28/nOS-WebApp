@@ -11,18 +11,20 @@
           <h1 class="white--text pa-2">{{ rigHostname[rig - 1].toUpperCase() }}</h1>
           </div>
           <div>
-            <ul style="cursor: pointer" class="rigUl green--text">
+            <ul style="cursor: pointer" class="rigUl white--text">
+              <li class="rigLi" @click='hashrateOver("nvidia")'>Nvidia :</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>69 C</li>
+              <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
             </ul>
-            <ul style="cursor: pointer"  class="rigUl red--text">
+            <ul style="cursor: pointer"  class="rigUl white--text">
+              <li class="rigLi" @click='hashrateOver("amd")'>Amd :</li>
               <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
               <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
               <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>69 C</li>
+              <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
               <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
             </ul>
             <div class="pt-2">
@@ -39,6 +41,7 @@
                 <v-list-tile
                   v-for="(item, index) in editList"
                   :key="index"
+                  :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
                 >
                   <v-list-tile-title>{{ item }}</v-list-tile-title>
                 </v-list-tile>
@@ -56,6 +59,7 @@
                 <v-list-tile
                   v-for="(item, index) in actionList"
                   :key="index"
+                  :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
                 >
                   <v-list-tile-title>{{ item }}</v-list-tile-title>
                 </v-list-tile>
@@ -68,21 +72,23 @@
 
         <v-card v-if='rigStatus[rig - 1]=="dead"' color="black" class="flashingCard rounded-card rigCard" height="100%">  
           <div align="left">
-          <h1 class="white--text pa-2">{{ rigHostname[rig - 1].toUpperCase() }}</h1>
+          <h1 class="redText pa-2">{{ rigHostname[rig - 1].toUpperCase() }}</h1>
           </div>
           <div>
-            <ul style="cursor: pointer" class="rigUl green--text">
+            <ul style="cursor: pointer" class="rigUl white--text">
+              <li class="rigLi" @click='hashrateOver("nvidia")'>NVIDIA :</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>69 C</li>
+              <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
               <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
             </ul>
-            <ul style="cursor: pointer"  class="rigUl red--text">
+            <ul style="cursor: pointer"  class="rigUl white--text">
+              <li class="rigLi" @click='hashrateOver("amd")'>AMD :</li>
               <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
               <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
               <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>69 C</li>
+              <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
               <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
             </ul>
             <div class="pt-2">
@@ -99,6 +105,7 @@
                     <v-list-tile
                       v-for="(item, index) in editList"
                       :key="index"
+                      :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
                     >
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
@@ -116,6 +123,7 @@
                     <v-list-tile
                       v-for="(item, index) in actionList"
                       :key="index"
+                      :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
                     >
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
@@ -130,15 +138,8 @@
     
     <v-flex xs16 sm16 md6 lg6>
       <v-dialog v-model="hashrate" width="75%">
-        <v-card class="infoCard"
-        style="
-          background: -webkit-linear-gradient(to top, #000000, #4b0082, #669999);
-          background: linear-gradient(to top, #000000, #4b0082, #669999);
-          ">
-          <v-card-title v-if='brand=="Nvidia"' class="green--text headline black lighten-2" primary-title>
-          {{ brand }}
-          </v-card-title>
-          <v-card-title v-else class="red--text headline black lighten-2" primary-title>
+        <v-card class="infoCard" color="white">
+          <v-card-title v-if='brand=="Nvidia"' class="--text headline black lighten-2" primary-title>
           {{ brand }}
           </v-card-title>
 
@@ -204,6 +205,17 @@ export default {
 </script>
 
 <style>
+.redText{
+  animation: flashingRed 1s infinite;
+}
+@keyframes flashingRed {
+  0% { color: red; }
+  25% { color: white; }
+  50% { color: red; }
+  75% { color: white; }
+  100% { color: red; }
+
+}
 .roundImg{
   border-radius: 50%;
 }
@@ -233,13 +245,14 @@ export default {
 }
 .rigUl {
   display: table;
+  margin: 0;
 }
 .rigLi {
   text-decoration: none;
-  letter-spacing: 0.10em;
+  width: 80px;
   display: inline-block;
-  padding: 2px 15px;
   position: relative;
+  text-align: center;
 }
 .rigLi:after {    
   background: none repeat scroll 0 0 transparent;
@@ -254,8 +267,8 @@ export default {
   width: 0;
 }
 .rigLi:hover:after { 
-  width: 100%; 
-  left: 0; 
+  width: 90px; 
+  left: -5px; 
 }
 @media screen and (max-height: 300px) {
 	ul {

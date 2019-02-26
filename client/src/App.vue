@@ -20,10 +20,9 @@
     </v-content>
 
     <v-footer fixed color="black" class="pa-3">
-      <div class="white--text">Marc Gagnon</div>
-      <div class="orange--text">(Chosn WebApp - Portfolio)</div>
+      <pre class="white--text pr-2">Marc Gagnon</pre>
+      <pre class="white--text">(Chosn WebApp - Portfolio) &copy; {{ new Date().getFullYear() }}</pre>
       <v-spacer></v-spacer>
-      <div>&copy; {{ new Date().getFullYear() }}</div>
     </v-footer>
 
   </v-app>
