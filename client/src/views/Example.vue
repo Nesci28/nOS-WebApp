@@ -7,7 +7,7 @@
           <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" class="fade-in rounded-card rigCard" height="100%" top="30%">  
             
               <h1 v-bind:class="{ redText: !rigStatus[rig - 1] }" class="white--text pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
-              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }}</h2> 
+              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }} ago</h2> 
               <hr style="clear:both;" color="#F0E296"/>
             
             <div>
