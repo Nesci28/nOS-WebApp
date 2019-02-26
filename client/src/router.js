@@ -1,8 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import Login from './views/Login.vue';
 import Example from './views/Example.vue';
-import System from './views/System.vue';
+import EditSystem from './views/EditSystem.vue';
+import EditCoins from './views/EditCoins.vue';
+import EditOverclocks from './views/EditOverclocks.vue';
+import Miners from './views/Miners.vue';
+import Coins from './views/Coins.vue';
 
 Vue.use(Router);
 
@@ -10,8 +14,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'login',
+      component: Login,
     },
     {
       path: '/example',
@@ -19,9 +23,29 @@ export default new Router({
       component: Example,
     },
     {
-      path: '/System/:id',
-      name: 'System',
-      component: System,
+      path: '/EditSystem/:id',
+      name: 'EditSystem',
+      component: EditSystem,
+    },
+    {
+      path: '/EditCoins/:id',
+      name: 'EditCoins',
+      component: EditCoins,
+    },
+    {
+      path: '/EditOverclocks/:id',
+      name: 'EditOverclocks',
+      component: EditOverclocks,
+    },
+    {
+      path: '/Coins',
+      name: 'Coins',
+      component: Coins,
+    },
+    {
+      path: '/miners',
+      name: 'miners',
+      component: Miners,
     }
   ],
 });

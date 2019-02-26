@@ -1,124 +1,56 @@
 <template>
-  <v-app style="
-    background: -webkit-linear-gradient(to top, #000000, #4b0082, #669999);
-    background: linear-gradient(to top, #000000, #4b0082, #669999);
-  ">
+  <v-app>
+    <div class="background">
+      
+      <v-layout row wrap>
+        <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
+          <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" class="fade-in rounded-card rigCard" height="100%" top="30%">  
+            
+              <h1 v-bind:class="{ redText: !rigStatus[rig - 1] }" class="white--text pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
+              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }}</h2> 
+              <hr style="clear:both;" color="#F0E296"/>
+            
+            <div>
+              <ul v-if='rigBrand[rig].includes("Nvidia")' style="cursor: pointer" class="rigUl white--text">
+                <li class="rigLi" @click='hashrateOver("nvidia")'>
+                  <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
+                </li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
+              </ul>
+              <v-divider color="#F0E296"></v-divider>
+              <ul v-if='rigBrand[rig].includes("Amd")' style="cursor: pointer"  class="rigUl white--text">
+                <li class="rigLi" @click='hashrateOver("amd")'>
+                  <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
+                </li>
+                <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
+              </ul>
+              <v-divider color="#F0E296"></v-divider>
 
-    <v-layout row wrap>
-      <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
-        <v-card v-if='rigStatus[rig - 1]!=="dead"' color="black" class="rounded-card rigCard" height="100%" top="30%">  
-          <div align="left">
-          <h1 class="white--text pa-2">{{ rigHostname[rig - 1].toUpperCase() }}</h1>
-          </div>
-          <div>
-            <ul style="cursor: pointer" class="rigUl white--text">
-              <li class="rigLi" @click='hashrateOver("nvidia")'>Nvidia :</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
-            </ul>
-            <ul style="cursor: pointer"  class="rigUl white--text">
-              <li class="rigLi" @click='hashrateOver("amd")'>Amd :</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
-            </ul>
-            <div class="pt-2">
-              <img src="../assets/alive.gif" height="40" class="pl-3" fill-height>
-            <v-menu offset-y>
-              <v-btn
-                slot="activator"
-                color="black"
-                class="white--text editBtn"
-              >
-                Edit
-              </v-btn>
-              <v-list>
-                <v-list-tile
-                  v-for="(item, index) in editList"
-                  :key="index"
-                  :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
-                >
-                  <v-list-tile-title>{{ item }}</v-list-tile-title>
-                </v-list-tile>
-              </v-list>
-            </v-menu>
-            <v-menu offset-y>
-              <v-btn
-                slot="activator"
-                color="black"
-                class="white--text editBtn"
-              >
-                Actions
-              </v-btn>
-              <v-list>
-                <v-list-tile
-                  v-for="(item, index) in actionList"
-                  :key="index"
-                  :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
-                >
-                  <v-list-tile-title>{{ item }}</v-list-tile-title>
-                </v-list-tile>
-              </v-list>
-            </v-menu>
-            <!-- <v-btn flat color="white" class="span-text">Edit Coins</v-btn> -->
-            </div>
-          </div>
-        </v-card>
-
-        <v-card v-if='rigStatus[rig - 1]=="dead"' color="black" class="flashingCard rounded-card rigCard" height="100%">  
-          <div align="left">
-          <h1 class="redText pa-2">{{ rigHostname[rig - 1].toUpperCase() }}</h1>
-          </div>
-          <div>
-            <ul style="cursor: pointer" class="rigUl white--text">
-              <li class="rigLi" @click='hashrateOver("nvidia")'>NVIDIA :</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
-              <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
-            </ul>
-            <ul style="cursor: pointer"  class="rigUl white--text">
-              <li class="rigLi" @click='hashrateOver("amd")'>AMD :</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
-              <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
-            </ul>
-            <div class="pt-2">
-              <img src="../assets/flatline.gif" class="pl-3" height="40">
+              <div class="pt-2">
+                <img v-if='rigStatus[rig - 1]' src="../assets/alive.gif" height="40" class="pl-3" fill-height>
+                <img v-else src="../assets/flatline.gif" height="40" class="pl-3" fill-height>
                 <v-menu offset-y>
-                  <v-btn
-                    slot="activator"
-                    color="black"
-                    class="white--text editBtn"
-                  >
-                    Edit
-                  </v-btn>
+                  <v-btn slot="activator" color="black" class="white--text editBtn">Edit</v-btn>
                   <v-list>
                     <v-list-tile
                       v-for="(item, index) in editList"
                       :key="index"
-                      :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
+                      :to="{ name: 'Edit' + item, params: { id: rigHostname[rig - 1] } }"
                     >
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
                 </v-menu>
                 <v-menu offset-y>
-                  <v-btn
-                    slot="activator"
-                    color="black"
-                    class="white--text editBtn"
-                  >
-                    Actions
-                  </v-btn>
+                  <v-btn slot="activator" color="black" class="white--text editBtn">Actions</v-btn>
                   <v-list>
                     <v-list-tile
                       v-for="(item, index) in actionList"
@@ -128,41 +60,48 @@
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
                   </v-list>
-                </v-menu>                       
+                </v-menu>
+              
+              </div>
             </div>
-          </div>
-        </v-card>
+          </v-card>
+
+        </v-flex>
+      </v-layout>
+      
+      <v-flex xs16 sm16 md6 lg6>
+        <v-dialog v-model="gpuDialog" width="75%">
+          <v-card class="infoCard rounded-card" color="black">
+            <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2" primary-title>
+            {{ brand }}
+            </v-card-title>
+            <v-card-title v-if='brand=="Amd"' class="red--text headline black lighten-2" primary-title>
+            {{ brand }}
+            </v-card-title>
+
+            <v-divider color="#F0E296"></v-divider>
+
+            <div v-if='brand=="Nvidia"'>
+              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
+                <li class="gpuLi">GPU {{ gpu }}</li>
+                <li class="gpuLi">hashrate: {{ hashrateNvidia || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ temperatureNvidia || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ wattNvidia || "undefined" }}</li>
+              </ul>
+            </div>
+            <div v-if='brand=="Amd"'>
+              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
+                <li class="gpuLi">GPU {{ gpu }}</li>
+                <li class="gpuLi">hashrate: {{ hashrateAmd || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ temperatureAmd || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ wattAmd || "undefined" }}</li>
+              </ul>
+            </div>
+          </v-card>      
+        </v-dialog>
 
       </v-flex>
-    </v-layout>
-    
-    <v-flex xs16 sm16 md6 lg6>
-      <v-dialog v-model="hashrate" width="75%">
-        <v-card class="infoCard" color="white">
-          <v-card-title v-if='brand=="Nvidia"' class="--text headline black lighten-2" primary-title>
-          {{ brand }}
-          </v-card-title>
-
-          <div v-if='brand=="Nvidia"'>
-            <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
-              <li class="gpuLi">GPU {{ gpu }}</li>
-              <li class="gpuLi">hashrate: {{ hashrateNvidia || "undefined" }}</li>
-              <li class="gpuLi">temperature: {{ temperatureNvidia || "undefined" }}</li>
-              <li class="gpuLi">watt: {{ wattNvidia || "undefined" }}</li>
-            </ul>
-          </div>
-          <div v-if='brand=="Amd"'>
-            <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
-              <li class="gpuLi">GPU {{ gpu }}</li>
-              <li class="gpuLi">hashrate: {{ hashrateAmd || "undefined" }}</li>
-              <li class="gpuLi">temperature: {{ temperatureAmd || "undefined" }}</li>
-              <li class="gpuLi">watt: {{ wattAmd || "undefined" }}</li>
-            </ul>
-          </div>
-        </v-card>      
-      </v-dialog>
-
-    </v-flex>
+    </div>
   </v-app>
 </template>
 
@@ -173,11 +112,16 @@ export default {
     return {
       rigNumber: [1, 2, 3],
       rigHostname: ["13bj5bv3k", "2jhO2h4bd", "3bvoi2h34"],
-      rigStatus: ["alive", "dead", "alive"],
+      rigStatus: [true, false, true],
+      rigBrand:{
+        1: ["Nvidia", "Amd"],
+        2: ["Nvidia"],
+        3: ["Amd"]
+      },
       rigSeen: ["30 secs", "5 hours", "30 secs"],
       gpuNumber: [1, 2, 3, 4, 5, 6],
-      hashrate: false,
-      editList: ["System", "Coins", "Overclock"],
+      gpuDialog: false,
+      editList: ["System", "Coins", "Overclocks"],
       actionList: ["Restart", "SSH"],
       brand: undefined,
       hashrateNvidia: undefined,
@@ -190,7 +134,7 @@ export default {
   },
   methods: {
     hashrateOver(brand) {
-      this.hashrate = !this.hashrate
+      this.gpuDialog = !this.gpuDialog
       if (brand == "nvidia") {
         this.brand = "Nvidia"
       } else {
@@ -205,16 +149,13 @@ export default {
 </script>
 
 <style>
-.redText{
-  animation: flashingRed 1s infinite;
-}
-@keyframes flashingRed {
-  0% { color: red; }
-  25% { color: white; }
-  50% { color: red; }
-  75% { color: white; }
-  100% { color: red; }
-
+.background{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: url(../assets/btc.jpeg);
+  height: 100%;
+  background-size: cover;
 }
 .roundImg{
   border-radius: 50%;
@@ -279,6 +220,37 @@ export default {
   vertical-align:50%;
 }
 
+.fade-in {
+	-webkit-animation: fade-in 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: fade-in 1.2s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+@-webkit-keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.redText{
+  animation: flashingRed 1s infinite;
+}
+@keyframes flashingRed {
+  0% { color: red; }
+  25% { color: white; }
+  50% { color: red; }
+  75% { color: white; }
+  100% { color: red; }
+
+}
 .flashingCard {
 	-webkit-animation: vibrate-1 0.3s linear infinite both;
 	        animation: vibrate-1 0.3s linear infinite both;
