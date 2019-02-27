@@ -1,0 +1,76 @@
+{ 
+  "Time": 1551186824588,
+  "Nvidia": 
+   { 
+    "Coin": "RVN",
+    "Algo": "X16R",
+    "Total Hashrate": null,
+    "Coin Info": 
+    { 
+      "opts": "",
+      "worker1": "DEV",
+      "address1": "nesci.DEV",
+      "poolUri1": "stratum+tcp://rvn.suprnova.cc:6667",
+      "pool1": "rvn.suprnova.cc",
+      "port1": 6667,
+      "poolstratum1": "rvn.suprnova.cc:6667",
+      "password1": "x",
+      "worker2": "DEV",
+      "address2": "",
+      "poolUri2": "",
+      "pool2": "",
+      "port2": "",
+      "poolstratum2": ":",
+      "password2": "",
+      "miner": "TREX_CUDA92",
+      "path": "/home/chosn/Miners/TREX_CUDA92/t-rex",
+      "command": "-a ${ALGO,,} -o ${POOLSTRATUM} -u $ADDRESS -p $PASSWORD -J -b 0.0.0.0:4200 ${OPTS}",
+      "commandGenerated": "-a x16r -o rvn.suprnova.cc:6667 -u nesci.DEV -p x -J -b 0.0.0.0:4200",
+      "env": "env 'LD_PRELOAD=libcurl.so.3'",
+      "cuda": "",
+      "finalCommand": "env 'LD_PRELOAD=libcurl.so.3' /home/chosn/Miners/TREX_CUDA92/t-rex -a x16r -o rvn.suprnova.cc:6667 -u nesci.DEV -p x -J -b 0.0.0.0:4200"
+    },
+    "GPU": {
+    } 
+  },
+  "Amd": { 
+    "Coin": "RVN",
+    "Algo": "X16R",
+    "Total Hashrate": null,
+    "Coin Info": { 
+      "opts": "",
+      "worker1": "DEV",
+      "address1": "nesci.DEV",
+      "poolUri1": "stratum+tcp://rvn.suprnova.cc:6667",
+      "pool1": "rvn.suprnova.cc",
+      "port1": 6667,
+      "poolstratum1": "rvn.suprnova.cc:6667",
+      "password1": "x",
+      "worker2": "DEV",
+      "address2": "",
+      "poolUri2": "",
+      "pool2": "",
+      "port2": "",
+      "poolstratum2": ":",
+      "password2": "",
+      "miner": "WILDRIG",
+      "path": "/home/chosn/Miners/WILDRIG/wildrig-multi",
+      "command": "--algo ${ALGO,,} --url ${POOLSTRATUM} --user ${ADDRESS} --pass ${PASSWORD} --api-port 3334 --donate-level 1 ${OPTS}",
+      "commandGenerated": "--algo x16r --url rvn.suprnova.cc:6667 --user nesci.DEV --pass x --api-port 3334 --donate-level 1",
+      "env": "",
+      "cuda": "",
+      "finalCommand": "/home/chosn/Miners/WILDRIG/wildrig-multi --algo x16r --url rvn.suprnova.cc:6667 --user nesci.DEV --pass x --api-port 3334 --donate-level 1"
+    },
+    "GPU": {
+    } 
+  },
+  "CPU": { 
+    "Coins": null,
+    "Algo": null,
+    "Total Hashrate": null,
+    "Coin Info": {
+    },
+    "GPU": {
+    } 
+  } 
+}
