@@ -2,8 +2,6 @@
   <v-app>
     <div class="background">
 
-      <h1 class="white--text centerTitle">Use the login information you configured your rigs with</h1>
-
       <div class="login-box pt-5">
         <h3 @click="example" class="hidden-sm-and-down exampleVertical">View an Example</h3>
         <h1>Login</h1>
@@ -20,6 +18,7 @@
 
         <input @click="checkLogin" type="submit" class="btn" value="Sign in">
         <h3 @click="example" class="hidden-md-and-up btn">View an Example</h3>
+        <h3 class="white--text">Use the login information you configured your rigs with</h3>
         
       </div>
     </div>
@@ -43,14 +42,17 @@ export default {
       this.$router.push('example')
     },
     checkLogin() {
-      if (this.user.login == 'admin' && this.user.password == 'admin') {
-        this.loggedIn = true
-        this.$router.push('example')
+      if (this.user.login && this.user.password) {
+        localStorage.name = this.user.login
+        localStorage.password = this.user.password
+        this.$router.push('rigs')
       }
     }
   },
   created: function () {
-
+    if (localStorage.name && localStorage.password) {
+      this.$router.push('rigs')
+    }
   }
 };
 </script>

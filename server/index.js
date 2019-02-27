@@ -1,33 +1,58 @@
-const express = require('express')
-const morgan = require('morgan')
-const fs = require('fs')
-const bodyparser=require('body-parser')
-const cp = require('child_process')
-const os = require('os')
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
+const monk = require('monk');
 const localtunnel = require('localtunnel')
-const getJson = require('/home/chosn/CHOSN/getJson')
 
-const app = express()
+const db = monk('nesci:012Webserver@ds153495.mlab.com:53495/webserver');
+const rigsInfo = db.get('rigsInfo');
 
-const hostname = os.hostname().toLowerCase()
+const app = express();
 
-app.get('/', async (req, res) => {
-  let json = await getJson();
-	res.send(json);
-})
+app.use(morgan('tiny'));
+app.use(cors());
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-const port = 5000
+function notFound(req, res, next) {
+    res.status(404);
+    const error = new Error('Not Found');
+    next(error)
+}
+
+function errorHandler(error, req, res, next) {
+    res.status(res.statusCode || 500);
+    res.json({
+        message: error.message
+    });
+}
+
+app.get('/db/:user/:pass', (req, res) => {
+  const user = req.params.user
+  const password = req.params.pass
+  rigsInfo
+  .find({"username": user, "password": password})
+  .then(data => {
+    res.json(data)   
+  }); 
+});
+
+app.post('/add', (req, res) => {
+  
+});
+
+  
+app.use(notFound);
+app.use(errorHandler);
+
+const port = process.env.PORT || 5000;
+
 app.listen(port, () => {
-	console.log(`Listening on http://localhost:${port}`)
-	const tunnel = localtunnel(port, {subdomain: `chosn-${hostname}`},function(err, tunnel) {
+  console.log('Listening on port', port);
+  const tunnel = localtunnel(port, {subdomain: `chosn`},function(err, tunnel) {
     if (err) return
     console.log(tunnel.url)
     tunnel.url;
 	});
-})
-
-app.use(express.static('website'))
-app.use(bodyparser.urlencoded({extended:false}))
-app.use(bodyparser.json())
-
-
+});
