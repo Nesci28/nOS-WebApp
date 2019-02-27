@@ -7,6 +7,7 @@ import EditCoins from './views/EditCoins.vue';
 import EditOverclocks from './views/EditOverclocks.vue';
 import Miners from './views/Miners.vue';
 import Coins from './views/Coins.vue';
+import Rigs from './views/Rigs.vue';
 
 Vue.use(Router);
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/miners',
       name: 'miners',
       component: Miners,
+    },
+    {
+      path: '/rigs',
+      name: 'rigs',
+      component: Rigs,
     }
   ],
 });
