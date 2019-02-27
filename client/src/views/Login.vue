@@ -43,14 +43,16 @@ export default {
     },
     checkLogin() {
       if (this.user.login && this.user.password) {
-        localStorage.name = this.user.login
+        this.$store.state.username = this.user.login
+        this.$store.state.password = this.user.password
+        localStorage.username = this.user.login
         localStorage.password = this.user.password
         this.$router.push('rigs')
       }
     }
   },
   created: function () {
-    if (localStorage.name && localStorage.password) {
+    if (localStorage.username && localStorage.password) {
       this.$router.push('rigs')
     }
   }

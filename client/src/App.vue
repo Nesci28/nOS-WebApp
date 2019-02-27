@@ -3,15 +3,15 @@
 
     <v-toolbar app fixed color="black" class="white--text">
       <v-toolbar-side-icon @click.stop="drawer=!drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
-      <v-divider v-if="loggedIn" vertical color="white" class="hidden-md-and-up"></v-divider>
+      <v-divider vertical color="white" class="hidden-md-and-up"></v-divider>
       <router-link to="/" class="toolbarHome pr-4">CHOSN</router-link>
-      <v-divider v-if="loggedIn==true" vertical color="white" class="hidden-sm-and-down"></v-divider>
-      <router-link v-if="loggedIn==true" to="/Coins" class="hidden-sm-and-down toolbar">Coins</router-link>
-      <v-divider v-if="loggedIn==true" vertical color="white" class="hidden-sm-and-down"></v-divider>
-      <router-link v-if="loggedIn==true" to="/Miners" class="hidden-sm-and-down toolbar">Miners</router-link>
-      <v-divider v-if="loggedIn==true" vertical color="white" class="hidden-sm-and-down"></v-divider>
-      <span v-if="loggedIn==true" v-on:click="loggedOut" style="cursor: pointer" class="hidden-sm-and-down toolbar">Logout</span>
-      <span class="toolbar">{{ loggedIn }}</span>
+      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
+      <router-link v-if="isLoggedIn" to="/Coins" class="hidden-sm-and-down toolbar">Coins</router-link>
+      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
+      <router-link v-if="isLoggedIn" to="/Miners" class="hidden-sm-and-down toolbar">Miners</router-link>
+      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
+      <span v-if="isLoggedIn" v-on:click="loggedOut" style="cursor: pointer" class="hidden-sm-and-down toolbar">Logout</span>
+
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn href="https://discord.gg/aPg5W2k" target="_noblank" class="hidden-sm-and-down" type="email" flat color="white">
@@ -28,18 +28,18 @@
       dark
     >
     <v-list class="pt-0" dense>
-      <v-list-tile to="/Coins" onclick="location.reload(true)">
-        <v-list-tile-content>
+      <v-list-tile v-if="isLoggedIn" to="/Coins" onclick="location.reload(true)">
+        <v-list-tile-content >
           <v-list-tile-title>Coins</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-list-tile to="/Miners" onclick="location.reload(true)">
+      <v-list-tile v-if="isLoggedIn" to="/Miners" onclick="location.reload(true)">
         <v-list-tile-content>
           <v-list-tile-title>Miners</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
       <v-divider></v-divider>
-      <v-list-tile to="/" @click="loggedOut">
+      <v-list-tile v-if="isLoggedIn" to="/" @click="loggedOut">
         <v-list-tile-content>
           <v-list-tile-title>  
             <v-icon>exit_to_app</v-icon>
@@ -77,25 +77,25 @@
     data() {
       return {
         drawer: false,
-        loggedIn: this.loggedInFunction()
       }
     },
     methods: {
       loggedOut() {
-        localStorage.name = ""
+        this.$store.state.username = ""
+        this.$store.state.password = ""
+        localStorage.username = ""
         localStorage.password = ""
         this.$router.push('/')
-      },
-      loggedInFunction: function() {
-        if (localStorage.name && localStorage.password) return true
-        return false
       },
       email() {
         console.log("you pressed the mail button")
       }
     },
     computed: {
-
+      isLoggedIn() {
+        if (this.$store.state.username && this.$store.state.password) return true
+        return false
+      },
     }
   }
 </script>
