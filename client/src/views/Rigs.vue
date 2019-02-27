@@ -154,15 +154,15 @@ export default {
         this.rigStatus[i] = false
         this.rigSeen[i] = this.rigSeen[i] + this.timeDifference
       }
-      console.log(this.newObject.Nvidia)
-      if (Object.keys(this.newObject.Nvidia.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Nvidia")
-      if (Object.keys(this.newObject.Amd.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Amd")
+      console.log(this.newObject[0])
+      if (Object.keys(this.newObject[0].Nvidia.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Nvidia")
+      if (Object.keys(this.newObject[0].Amd.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Amd")
     }
   },
   created() {
     console.log("db initialized")
     axios
-      .get(`http://chosn.localtunnel.me/db/${localStorage.name}/${localStorage.password}`)
+      .get('http://chosn.localtunnel.me/db/' + this.$store.state.username + '/' + this.$store.state.password)
       .then(response => {
         this.rigHostname = new Set()
         for (let i = 0; i < response.data.length; i++) {
