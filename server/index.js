@@ -32,7 +32,7 @@ app.get('/db/:user/:pass', (req, res) => {
   const user = req.params.user
   const password = req.params.pass
   rigsInfo
-  .find({"username": user, "password": password})
+  .find({"Username": user, "Password": password})
   .then(data => {
     res.json(data)   
   }); 

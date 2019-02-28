@@ -1,35 +1,36 @@
 <template>
   <v-app>
     <div class="background">
+
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
-          <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" class="fade-in rounded-card rigCard" height="100%" top="30%">  
+          <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
             
               <h1 v-bind:class="{ redText: !rigStatus[rig - 1] }" class="white--text pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
               <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }} ago</h2> 
               <hr style="clear:both;" color="#F0E296"/>
             
             <div>
-              <ul v-if='rigBrand[rig].includes("Nvidia")' style="cursor: pointer" class="rigUl white--text">
+              <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUl white--text">
                 <li class="rigLi" @click='hashrateOver("nvidia")'>
                   <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
                 </li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>SUQA</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>X22I</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>51,3 MH/s</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>69 °C</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>700 W</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ coin[rig - 1][0] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ algo[rig - 1][0] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ hashrateNvidia }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ temperatureNvidia }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ wattNvidia }} W</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
-              <ul v-if='rigBrand[rig].includes("Amd")' style="cursor: pointer"  class="rigUl white--text">
+              <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUl white--text">
                 <li class="rigLi" @click='hashrateOver("amd")'>
                   <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
                 </li>
-                <li class="rigLi" @click='hashrateOver("amd")'>SUQA</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>X22I</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>51,3 MH/s</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>69 °C</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>700 W</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>{{ coin[rig - 1][1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>{{ algo[rig - 1][1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>{{ hashrateAmd }}</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>{{ temperatureAmd }}</li>
+                <li class="rigLi" @click='hashrateOver("amd")'>{{ wattAmd }} W</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
 
@@ -111,15 +112,16 @@ export default {
   name: 'App',
   data() {
     return {
-      newObject: {},
-      oldObject: {},
+      url: 'http://sour-starfish-32.localtunnel.me/db/',
+
+      coin: [],
+      algo: [],
       timeDifference: [],
-      
       rigNumber: [],
       rigSeen: [],
       rigHostname: [],
       rigStatus: [],
-      rigBrand: {},
+      rigBrand: [],
       
       hashrateNvidia: undefined,
       hashrateAmd: undefined,
@@ -127,8 +129,23 @@ export default {
       temperatureAmd: undefined,
       wattNvidia: undefined,
       wattAmd: undefined,
+      
+      gpuNumberNvidia: [],
+      gpuUtilizationNvidia: [],
+      gpuHashrateNvidia: [],
+      gpuTemperatureNvidia: [], 
+      gpuWattNvidia: [], 
+      gpuCClockNvidia: [], 
+      gpuMClockNvidia: [], 
 
-      gpuNumber: [1, 2, 3, 4, 5, 6],
+      gpuNumberAmd: [],
+      gpuUtilizationAmd: [],
+      gpuHashrateAmd: [],
+      gpuTemperatureAmd: [], 
+      gpuWattAmd: [], 
+      gpuCClockAmd: [], 
+      gpuMClockAmd: [], 
+      
       brand: undefined,
       gpuDialog: false,
 
@@ -145,44 +162,111 @@ export default {
         this.brand = "Amd"
       }
     },
-    getInfo(i) {
-      this.timeDifference[i] = this.newObject.time - this.oldObject.time
-      if (this.timeDifference < 30) {
-        this.rigStatus[i] = true
-        this.rigSeen[i] = this.timeDifference
+    returnToDefaults() {
+      this.timeDifference = [],
+      this.rigNumber = [],
+      this.rigSeen = [],
+      this.rigHostname = [],
+      this.rigStatus = [],
+      this.rigBrand = [],
+
+      this.hashrateNvidia = undefined,
+      this.hashrateAmd = undefined,
+      this.temperatureNvidia = undefined,
+      this.temperatureAmd = undefined,
+      this.wattNvidia = undefined,
+      this.wattAmd = undefined,
+      
+      this.gpuNumberNvidia = [],
+      this.gpuUtilizationNvidia = [],
+      this.gpuHashrateNvidia = [],
+      this.gpuTemperatureNvidia = [], 
+      this.gpuWattNvidia = [], 
+      this.gpuCClockNvidia = [], 
+      this.gpuMClockNvidia = [], 
+
+      this.gpuNumberAmd = [],
+      this.gpuUtilizationAmd = [],
+      this.gpuHashrateAmd = [],
+      this.gpuTemperatureAmd = [], 
+      this.gpuWattAmd = [], 
+      this.gpuCClockAmd = [], 
+      this.gpuMClockAmd = [], 
+      
+      this.brand = undefined,
+      this.gpuDialog = false
+    },
+    rigInfo() {
+      this.returnToDefaults()
+
+      axios
+        .get(this.url + this.$store.state.username + '/' + this.$store.state.password)
+        .then(response => {
+          console.log(response.data)
+
+          this.rigHostname = new Set()
+          for (let i = 0; i < response.data.length; i++) {
+            this.rigHostname.add(response.data[i].Hostname)
+            
+            this.rigNumber.push(i + 1)
+
+            let now = + new Date()
+            this.timeDifference[i] = now - response.data[i]["New Time"]
+            if (this.timeDifference[i] < 1 * 60 * 1000) {
+              this.rigStatus[i] = true
+              this.rigSeen[i] = "< 30 secs"
+            } else {
+              this.rigStatus[i] = false
+              let time = this.timeDifference[i]
+              time = Math.round(time / 1000 / 60)
+              this.rigSeen[i] = "> " + time + " mins"
+            }
+            
+            if (Object.keys(response.data[i].Nvidia.GPU).length > 0 && Object.keys(response.data[i].Amd.GPU).length > 0) {
+              this.rigBrand[i] = ["Nvidia", "Amd"]
+              this.coin[i] = [response.data[i].Nvidia.Coin, response.data[i].Amd.Coin]
+              this.algo[i] = [response.data[i].Nvidia.Algo, response.data[i].Amd.Algo]
+              this.getGpuInfo(i, "Nvidia", response)
+              this.getGpuInfo(i, "Amd", response)
+            } else if (Object.keys(response.data[i].Nvidia.GPU).length > 0) {
+              this.rigBrand[i] = "Nvidia"
+              this.coin[i] = [response.data[i].Nvidia.Coin]
+              this.algo[i] = [response.data[i].Nvidia.Algo]
+              this.getGpuInfo(i, "Nvidia", response)
+            } else if (Object.keys(response.data[i].Amd.GPU).length > 0) {
+              this.rigBrand[i] = "Amd"
+              this.coin[i] = ["", response.data[i].Amd.Coin]
+              this.algo[i] = ["", response.data[i].Amd.Algo]
+              this.getGpuInfo(i, "Amd", response)
+            }
+          }
+          this.rigHostname = Array.from(this.rigHostname)
+          console.log(this.coin, this.algo, this.hashrateNvidia, this.temperatureNvidia, this.wattNvidia, this.hashrateAmd, this.temperatureAmd, this.wattAmd, this.rigNumber, this.rigHostname, this.rigStatus, this.rigSeen, this.rigBrand)
+        })
+    },
+    getGpuInfo(i, brand, response) {
+      if (brand == "Nvidia") {
+        this.hashrateNvidia = response.data[i].Nvidia["Total Hashrate"]
+        this.temperatureNvidia = response.data[i].Nvidia["Avg Temperature"]
+        this.wattNvidia = response.data[i].Nvidia["Total Watt"]
       } else {
-        this.rigStatus[i] = false
-        this.rigSeen[i] = this.rigSeen[i] + this.timeDifference
+        this.hashrateAmd = response.data[i].Amd["Total Hashrate"]
+        this.temperatureAmd = response.data[i].Amd["Avg Temperature"]
+        this.wattAmd = response.data[i].Amd["Total Watt"]
       }
-      console.log(this.newObject[0])
-      if (Object.keys(this.newObject[0].Nvidia.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Nvidia")
-      if (Object.keys(this.newObject[0].Amd.GPU).length > 0) this.rigBrand[i] = this.rigBrand[i].push("Amd")
     }
   },
   created() {
-    console.log("db initialized")
-    axios
-      .get('http://chosn.localtunnel.me/db/' + this.$store.state.username + '/' + this.$store.state.password)
-      .then(response => {
-        this.rigHostname = new Set()
-        for (let i = 0; i < response.data.length; i++) {
-          this.rigHostname.add(response.data[i].rig)
-        }
-        this.rigHostname = Array.from(this.rigHostname)
-        
-        for (var i = 0; i < this.rigHostname.length; i++) {    
-          let rigObject = response.data.filter(obj => {
-            return obj.rig === this.rigHostname[i]
-          })
-          this.rigNumber[i] = i + 1
-          this.oldObject[i] = rigObject[rigObject.length - 2].info
-          this.newObject[i] = rigObject[rigObject.length - 1].info
-
-          this.getInfo(i)
-        }
-      })
+    if (!this.$store.state.username || !this.$store.state.password) {
+      this.$router.push('/')
+    } else {
+      console.log("db initialized")
+      this.rigInfo()
+      setInterval(this.rigInfo, 30000)
+    }
   }
-};
+}
+
 </script>
 
 <style>

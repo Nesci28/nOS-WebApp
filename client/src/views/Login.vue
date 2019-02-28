@@ -2,8 +2,8 @@
   <v-app>
     <div class="background">
 
-      <div class="login-box pt-5">
-        <h3 @click="example" class="hidden-sm-and-down exampleVertical">View an Example</h3>
+      <v-form v-on:submit="checkLogin" class="login-box pt-5">
+        <v-btn flat @click="example" color="#F0E296" class="hidden-sm-and-down exampleVertical">View an Example</v-btn>
         <h1>Login</h1>
 
         <div class="textbox">
@@ -16,11 +16,11 @@
           <input type="password" placeholder="Password" v-model="user.password">
         </div>
 
-        <input @click="checkLogin" type="submit" class="btn" value="Sign in">
-        <h3 @click="example" class="hidden-md-and-up btn">View an Example</h3>
+        <v-btn flat @click="checkLogin" type="submit" color="#F0E296" class="btn">Login</v-btn>
+        <v-btn flat @click="example" color="#F0E296" class="hidden-md-and-up btn">Example</v-btn>
         <h3 class="white--text">Use the login information you configured your rigs with</h3>
         
-      </div>
+      </v-form>
     </div>
   </v-app>
 </template>
@@ -35,6 +35,8 @@ export default {
         login: "",
         password: "",
       },
+      windowsWidth: 0,
+      smallScreen: false
     }
   },
   methods: {
@@ -42,6 +44,8 @@ export default {
       this.$router.push('example')
     },
     checkLogin() {
+      console.log('submit');
+      
       if (this.user.login && this.user.password) {
         this.$store.state.username = this.user.login
         this.$store.state.password = this.user.password
@@ -51,8 +55,13 @@ export default {
       }
     }
   },
+  mounted() {
+
+  },
   created: function () {
     if (localStorage.username && localStorage.password) {
+      this.$store.state.username = localStorage.username
+      this.$store.state.password = localStorage.password
       this.$router.push('rigs')
     }
   }
@@ -63,34 +72,17 @@ export default {
 .centerTitle{
   text-align: center;
 }
-.exampleHorizontal{
-  position: absolute;
-  width: 12%;
-  background: none;
-  border: 3px solid rgb(240, 226, 150);
-  color: rgb(240, 226, 150);
-  font-size: 30px;
-  text-align: center;
-  cursor: pointer;
-  margin: 15px 0;
-  height: 92.5%;
-  left: -15%;
-}
 .exampleVertical{
-  position: absolute;
-  width: 12%;
+  transform: rotate(90deg) translate(50% , 510%);
+  height: 20%;
   background: none;
   border: 3px solid rgb(240, 226, 150);
   color: rgb(240, 226, 150);
+  padding: 5px;
   font-size: 30px;
-  text-align: center;
-  cursor: pointer;
-  margin: 15px 0;
-  height: 80%;
-  left: -15%;
-  top: 13%;
-  writing-mode: vertical-lr;
+  margin: 18px 0;
 }
+
 .background{
   margin: 0;
   padding: 0;
@@ -100,11 +92,10 @@ export default {
   background-size: cover;
 }
 .login-box{
-  width: 40%;
-  top: 25%;
-  position: absolute;
+  width: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%);
+  position: absolute;
   color: white;
 }
 .login-box h1{
@@ -148,8 +139,8 @@ export default {
   color: rgb(240, 226, 150);
   padding: 5px;
   font-size: 30px;
-  cursor: pointer;
   margin: 12px 0;
+  height: 20%;
 }
 </style>
 

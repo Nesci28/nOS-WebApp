@@ -23,7 +23,11 @@ export default {
 
   },
   created() {
-    this.id = this.$route.params.id;
+    if (!this.$store.state.username || !this.$store.state.username) {
+      this.$router.push('/')
+    } else {
+      this.id = this.$route.params.id;
+    }
   }
 };
 </script>
