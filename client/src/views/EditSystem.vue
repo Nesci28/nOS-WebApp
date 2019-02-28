@@ -168,8 +168,12 @@ export default {
     }
   },
   created() {
-    this.id = this.$route.params.id;
-    this.defaults()
+    if (!this.$store.state.username || !this.$store.state.username) {
+      this.$router.push('/')
+    } else {
+      this.id = this.$route.params.id;
+      this.defaults()
+    }
   }
 };
 </script>
