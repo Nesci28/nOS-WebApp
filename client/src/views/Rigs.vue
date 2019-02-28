@@ -15,22 +15,22 @@
                 <li class="rigLi" @click='hashrateOver("nvidia")'>
                   <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
                 </li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ coin[rig - 1][0] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ algo[rig - 1][0] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ hashrateNvidia }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ temperatureNvidia }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia")'>{{ wattNvidia }} W</li>
+                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ coin[rig - 1][0] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ algo[rig - 1][0] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ temperatureNvidia[rig - 1] }}</li>
+                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ wattNvidia[rig - 1] }} W</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
               <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUl white--text">
                 <li class="rigLi" @click='hashrateOver("amd")'>
                   <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
                 </li>
-                <li class="rigLi" @click='hashrateOver("amd")'>{{ coin[rig - 1][1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>{{ algo[rig - 1][1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>{{ hashrateAmd }}</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>{{ temperatureAmd }}</li>
-                <li class="rigLi" @click='hashrateOver("amd")'>{{ wattAmd }} W</li>
+                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ coin[rig - 1][1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ algo[rig - 1][1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ temperatureAmd[rig - 1] }}</li>
+                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ wattAmd[rig - 1] }} W</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
 
@@ -78,25 +78,27 @@
             <v-card-title v-if='brand=="Amd"' class="red--text headline black lighten-2" primary-title>
             {{ brand }}
             </v-card-title>
-
             <v-divider color="#F0E296"></v-divider>
 
+
+            <!-- gpu == 1 -->
             <div v-if='brand=="Nvidia"'>
-              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
-                <li class="gpuLi">GPU {{ gpu }}</li>
-                <li class="gpuLi">hashrate: {{ hashrateNvidia || "undefined" }}</li>
-                <li class="gpuLi">temperature: {{ temperatureNvidia || "undefined" }}</li>
-                <li class="gpuLi">watt: {{ wattNvidia || "undefined" }}</li>
+              <ul v-for="i in gpuNumberNvidia[key - 1]" :key="i" class="black--text gpuUl">
+                <li class="gpuLi">GPU : {{ i }}</li>
+                <li class="gpuLi">hashrate: {{ gpuHashrateNvidia[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ Number(gpuTemperatureNvidia[key - 1][i - 1]).toFixed(0) || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ gpuWattNvidia[key - 1][i - 1] || "undefined" }}</li>
               </ul>
             </div>
             <div v-if='brand=="Amd"'>
-              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
-                <li class="gpuLi">GPU {{ gpu }}</li>
-                <li class="gpuLi">hashrate: {{ hashrateAmd || "undefined" }}</li>
-                <li class="gpuLi">temperature: {{ temperatureAmd || "undefined" }}</li>
-                <li class="gpuLi">watt: {{ wattAmd || "undefined" }}</li>
+              <ul v-for="gpu in gpuNumberAmd[rig - 1]" :key="gpu" class="black--text gpuUl">
+                <li class="gpuLi">GPU : {{ i }}</li>
+                <li class="gpuLi">hashrate: {{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ gpuWattAmd[key - 1][i - 1] || "undefined" }}</li>
               </ul>
             </div>
+
           </v-card>      
         </v-dialog>
 
@@ -112,7 +114,8 @@ export default {
   name: 'App',
   data() {
     return {
-      url: 'http://sour-starfish-32.localtunnel.me/db/',
+      url: 'https://chosn-server.now.sh/db/',
+      i: 0,
 
       coin: [],
       algo: [],
@@ -123,12 +126,12 @@ export default {
       rigStatus: [],
       rigBrand: [],
       
-      hashrateNvidia: undefined,
-      hashrateAmd: undefined,
-      temperatureNvidia: undefined,
-      temperatureAmd: undefined,
-      wattNvidia: undefined,
-      wattAmd: undefined,
+      hashrateNvidia: [],
+      hashrateAmd: [],
+      temperatureNvidia: [],
+      temperatureAmd: [],
+      wattNvidia: [],
+      wattAmd: [],
       
       gpuNumberNvidia: [],
       gpuUtilizationNvidia: [],
@@ -148,16 +151,18 @@ export default {
       
       brand: undefined,
       gpuDialog: false,
+      key: 0,
 
       editList: ["System", "Coins", "Overclocks"],
       actionList: ["Restart", "SSH"]
     };
   },
   methods: {
-    hashrateOver(brand) {
+    hashrateOver(brand, key) {
       this.gpuDialog = !this.gpuDialog
       if (brand == "nvidia") {
         this.brand = "Nvidia"
+        this.key = key
       } else {
         this.brand = "Amd"
       }
@@ -170,12 +175,12 @@ export default {
       this.rigStatus = [],
       this.rigBrand = [],
 
-      this.hashrateNvidia = undefined,
-      this.hashrateAmd = undefined,
-      this.temperatureNvidia = undefined,
-      this.temperatureAmd = undefined,
-      this.wattNvidia = undefined,
-      this.wattAmd = undefined,
+      this.hashrateNvidia = [],
+      this.hashrateAmd = [],
+      this.temperatureNvidia = [],
+      this.temperatureAmd = [],
+      this.wattNvidia = [],
+      this.wattAmd = [],
       
       this.gpuNumberNvidia = [],
       this.gpuUtilizationNvidia = [],
@@ -224,35 +229,63 @@ export default {
             
             if (Object.keys(response.data[i].Nvidia.GPU).length > 0 && Object.keys(response.data[i].Amd.GPU).length > 0) {
               this.rigBrand[i] = ["Nvidia", "Amd"]
+              this.gpuNumberNvidia[i] = response.data[i].Nvidia.GPU.length
+              this.gpuNumberAmd[i] = response.data[i].Amd.GPU.length
               this.coin[i] = [response.data[i].Nvidia.Coin, response.data[i].Amd.Coin]
               this.algo[i] = [response.data[i].Nvidia.Algo, response.data[i].Amd.Algo]
               this.getGpuInfo(i, "Nvidia", response)
               this.getGpuInfo(i, "Amd", response)
             } else if (Object.keys(response.data[i].Nvidia.GPU).length > 0) {
               this.rigBrand[i] = "Nvidia"
+              this.gpuNumberNvidia[i] = response.data[i].Nvidia.GPU.length
               this.coin[i] = [response.data[i].Nvidia.Coin]
               this.algo[i] = [response.data[i].Nvidia.Algo]
               this.getGpuInfo(i, "Nvidia", response)
             } else if (Object.keys(response.data[i].Amd.GPU).length > 0) {
               this.rigBrand[i] = "Amd"
+              this.gpuNumberAmd[i] = response.data[i].Amd.GPU.length
               this.coin[i] = ["", response.data[i].Amd.Coin]
               this.algo[i] = ["", response.data[i].Amd.Algo]
               this.getGpuInfo(i, "Amd", response)
             }
           }
           this.rigHostname = Array.from(this.rigHostname)
-          console.log(this.coin, this.algo, this.hashrateNvidia, this.temperatureNvidia, this.wattNvidia, this.hashrateAmd, this.temperatureAmd, this.wattAmd, this.rigNumber, this.rigHostname, this.rigStatus, this.rigSeen, this.rigBrand)
+          //console.log(this.coin, this.algo, this.hashrateNvidia, this.temperatureNvidia, this.wattNvidia, this.hashrateAmd, this.temperatureAmd, this.wattAmd, this.rigNumber, this.rigHostname, this.rigStatus, this.rigSeen, this.rigBrand)
         })
     },
     getGpuInfo(i, brand, response) {
       if (brand == "Nvidia") {
-        this.hashrateNvidia = response.data[i].Nvidia["Total Hashrate"]
-        this.temperatureNvidia = response.data[i].Nvidia["Avg Temperature"]
-        this.wattNvidia = response.data[i].Nvidia["Total Watt"]
+        this.hashrateNvidia[i] = response.data[i].Nvidia["Total Hashrate"]
+        this.temperatureNvidia[i] = response.data[i].Nvidia["Avg Temperature"]
+        this.wattNvidia[i] = response.data[i].Nvidia["Total Watt"]
+        
+        let gpuHashTemp = []
+        let gpuTempTemp = []
+        let gpuWattTemp = []
+        for (let j = 0; j < response.data[i].Nvidia.GPU.length; j++) {
+          gpuHashTemp.push(response.data[i].Nvidia.GPU[j].Hashrate)
+          gpuTempTemp.push(response.data[i].Nvidia.GPU[j].Temperature)
+          gpuWattTemp.push(response.data[i].Nvidia.GPU[j].Watt)         
+        }
+        this.gpuHashrateNvidia.push(gpuHashTemp)
+        this.gpuTemperatureNvidia.push(gpuTempTemp)
+        this.gpuWattNvidia.push(gpuWattTemp)
       } else {
-        this.hashrateAmd = response.data[i].Amd["Total Hashrate"]
-        this.temperatureAmd = response.data[i].Amd["Avg Temperature"]
-        this.wattAmd = response.data[i].Amd["Total Watt"]
+        this.hashrateAmd[i] = response.data[i].Amd["Total Hashrate"]
+        this.temperatureAmd[i] = response.data[i].Amd["Avg Temperature"]
+        this.wattAmd[i] = response.data[i].Amd["Total Watt"]
+      
+        let gpuHashTemp = []
+        let gpuTempTemp = []
+        let gpuWattTemp = []
+        for (let j = 0; j < response.data[i].Amd.GPU.length; j++) {
+          gpuHashTemp.push(response.data[i].Amd.GPU[j].Hashrate)
+          gpuTempTemp.push(response.data[i].Amd.GPU[j].Temperature)
+          gpuWattTemp.push(response.data[i].Amd.GPU[j].Watt)
+        }
+        this.gpuHashrateAmd.push(gpuHashTemp)
+        this.gpuTemperatureAmd.push(gpuTempTemp)
+        this.gpuWattAmd.push(gpuWattTemp)
       }
     }
   },
