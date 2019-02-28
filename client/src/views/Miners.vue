@@ -19,8 +19,10 @@ export default {
   methods: {
 
   },
-  created: function () {
-
+  created() {
+    if (!this.$store.state.username || !this.$store.state.username) {
+      this.$router.push('/')
+    }
   }
 };
 </script>
