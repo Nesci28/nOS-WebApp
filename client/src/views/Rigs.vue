@@ -1,7 +1,8 @@
 <template>
   <v-app>
-    <div class="background">
+    <div class="background"></div>
 
+    <div class="content">
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
           <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
@@ -91,11 +92,11 @@
               </ul>
             </div>
             <div v-if='brand=="Amd"'>
-              <ul v-for="gpu in gpuNumberAmd[rig - 1]" :key="gpu" class="black--text gpuUl">
+              <ul v-for="i in gpuNumberAmd[key - 1]" :key="i" class="black--text gpuUl">
                 <li class="gpuLi">GPU : {{ i }}</li>
-                <li class="gpuLi">hashrate: {{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
                 <li class="gpuLi">temperature: {{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }}</li>
-                <li class="gpuLi">watt: {{ gpuWattAmd[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">hashrate: {{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ gpuWattAmd[key - 1][i - 1] || "undefined" }}</li> -->
               </ul>
             </div>
 
@@ -165,6 +166,7 @@ export default {
         this.key = key
       } else {
         this.brand = "Amd"
+        this.key = key
       }
     },
     returnToDefaults() {
@@ -267,9 +269,9 @@ export default {
           gpuTempTemp.push(response.data[i].Nvidia.GPU[j].Temperature)
           gpuWattTemp.push(response.data[i].Nvidia.GPU[j].Watt)         
         }
-        this.gpuHashrateNvidia.push(gpuHashTemp)
-        this.gpuTemperatureNvidia.push(gpuTempTemp)
-        this.gpuWattNvidia.push(gpuWattTemp)
+        this.gpuHashrateNvidia[i] = gpuHashTemp
+        this.gpuTemperatureNvidia[i] = gpuTempTemp
+        this.gpuWattNvidia[i] = gpuWattTemp
       } else {
         this.hashrateAmd[i] = response.data[i].Amd["Total Hashrate"]
         this.temperatureAmd[i] = response.data[i].Amd["Avg Temperature"]
@@ -283,9 +285,10 @@ export default {
           gpuTempTemp.push(response.data[i].Amd.GPU[j].Temperature)
           gpuWattTemp.push(response.data[i].Amd.GPU[j].Watt)
         }
-        this.gpuHashrateAmd.push(gpuHashTemp)
-        this.gpuTemperatureAmd.push(gpuTempTemp)
-        this.gpuWattAmd.push(gpuWattTemp)
+        this.gpuHashrateAmd[i] = gpuHashTemp
+        this.gpuTemperatureAmd[i] = gpuTempTemp
+        this.gpuWattAmd[i] = gpuWattTemp
+        console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd)
       }
     }
   },
@@ -303,13 +306,26 @@ export default {
 </script>
 
 <style>
+.content{
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  margin-left: 20px;
+  margin-right: 20px;
+}
 .background{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: url(../assets/btc.jpeg);
-  height: 100%;
-  background-size: cover;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: block;
+  background-image: url(../assets/btc.jpeg);
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
 }
 .roundImg{
   border-radius: 50%;
