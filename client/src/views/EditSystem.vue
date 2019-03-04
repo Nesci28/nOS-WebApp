@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <div class="background">
-      
+    <div class="background"></div>
+      <div class="content">
       <h1 class="white--text centerText pa-2">System Configurator {{ id.toUpperCase() }}</h1>
         
         <v-container grid-list-md text-xs-center>
@@ -44,7 +44,7 @@
               <h3 class="white--text">Donation :</h3>
             </v-flex>
             <v-flex xs6>
-              <v-text-field mask="###" dark outline color="#F0E296" v-model="donation" label="Numbers only"></v-text-field>
+              <v-text-field class="pl-4" mask="###" dark outline color="#F0E296" v-model="donation" label="Numbers only"></v-text-field>
             </v-flex>
             <v-flex xs4>
             </v-flex>
