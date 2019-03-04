@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <div class="background">
-      
+    <div class="background"></div>
+      <div class="content">
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
           <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" class="fade-in rounded-card rigCard" height="100%" top="30%">  
@@ -99,8 +99,37 @@
             </div>
           </v-card>      
         </v-dialog>
-
       </v-flex>
+
+      <v-flex xs16 sm16 md6 lg6>
+        <v-dialog v-model="rigGraph" width="75%">
+          <v-card class="infoCard rounded-card" color="black">
+            <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2" primary-title>
+            {{ rig }}
+            </v-card-title>
+
+            <v-divider color="#F0E296"></v-divider>
+
+            <div v-if='brand=="Nvidia"'>
+              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
+                <li class="gpuLi">GPU {{ gpu }}</li>
+                <li class="gpuLi">hashrate: {{ hashrateNvidia || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ temperatureNvidia || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ wattNvidia || "undefined" }}</li>
+              </ul>
+            </div>
+            <div v-if='brand=="Amd"'>
+              <ul v-for="gpu in gpuNumber" :key="gpu" class="black--text gpuUl">
+                <li class="gpuLi">GPU {{ gpu }}</li>
+                <li class="gpuLi">hashrate: {{ hashrateAmd || "undefined" }}</li>
+                <li class="gpuLi">temperature: {{ temperatureAmd || "undefined" }}</li>
+                <li class="gpuLi">watt: {{ wattAmd || "undefined" }}</li>
+              </ul>
+            </div>
+          </v-card>      
+        </v-dialog>
+      </v-flex>
+
     </div>
   </v-app>
 </template>
@@ -148,7 +177,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .background{
   margin: 0;
   padding: 0;

@@ -5,14 +5,21 @@
     <div class="content">
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
-          <v-card color="black" v-bind:class="{ flashingCard: !rigStatus[rig - 1]}" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
+          <v-card v-bind:class="{ flashingCard: disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
             
-              <h1 v-bind:class="{ redText: !rigStatus[rig - 1] }" class="white--text pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
+              <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
+              <v-switch
+                v-if='!rigStatus[rig - 1]'
+                v-model="disableSwitch[rig - 1]"
+                color="red"
+                class="pt-2 pl-3"
+                dark
+              ></v-switch>
               <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }} ago</h2> 
               <hr style="clear:both;" color="#F0E296"/>
             
             <div>
-              <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUl white--text">
+              <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUlGreen white--text">
                 <li class="rigLi" @click='hashrateOver("nvidia")'>
                   <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
                 </li>
@@ -23,7 +30,7 @@
                 <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ wattNvidia[rig - 1] }} W</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
-              <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUl white--text">
+              <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUlRed white--text">
                 <li class="rigLi" @click='hashrateOver("amd")'>
                   <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
                 </li>
@@ -36,10 +43,10 @@
               <v-divider color="#F0E296"></v-divider>
 
               <div class="pt-2">
-                <img v-if='rigStatus[rig - 1]' src="../assets/alive.gif" height="40" class="pl-3" fill-height>
-                <img v-else src="../assets/flatline.gif" height="40" class="pl-3" fill-height>
+<!--                <img v-if='rigStatus[rig - 1]' src="../assets/alive.gif" height="40" class="pl-3" fill-height>
+                <img v-else src="../assets/flatline.gif" height="40" class="pl-3" fill-height> -->
                 <v-menu offset-y>
-                  <v-btn slot="activator" color="black" class="white--text editBtn">Edit</v-btn>
+                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Edit</v-btn>
                   <v-list>
                     <v-list-tile
                       v-for="(item, index) in editList"
@@ -51,7 +58,7 @@
                   </v-list>
                 </v-menu>
                 <v-menu offset-y>
-                  <v-btn slot="activator" color="black" class="white--text editBtn">Actions</v-btn>
+                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Actions</v-btn>
                   <v-list>
                     <v-list-tile
                       v-for="(item, index) in actionList"
@@ -62,7 +69,7 @@
                     </v-list-tile>
                   </v-list>
                 </v-menu>
-              
+                <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
               </div>
             </div>
           </v-card>
@@ -79,31 +86,45 @@
             <v-card-title v-if='brand=="Amd"' class="red--text headline black lighten-2" primary-title>
             {{ brand }}
             </v-card-title>
+            <ul class="black--text gpuUl">
+              <li class="gpuLi">GPU #</li>
+              <li class="gpuLi">hashrate</li>
+              <li class="gpuLi">temperature</li>
+              <li class="gpuLi">watt</li>
+              <li class="gpuLi">name</li>                
+            </ul>
             <v-divider color="#F0E296"></v-divider>
 
-
-            <!-- gpu == 1 -->
             <div v-if='brand=="Nvidia"'>
               <ul v-for="i in gpuNumberNvidia[key - 1]" :key="i" class="black--text gpuUl">
-                <li class="gpuLi">GPU : {{ i }}</li>
-                <li class="gpuLi">hashrate: {{ gpuHashrateNvidia[key - 1][i - 1] || "undefined" }}</li>
-                <li class="gpuLi">temperature: {{ Number(gpuTemperatureNvidia[key - 1][i - 1]).toFixed(0) || "undefined" }}</li>
-                <li class="gpuLi">watt: {{ gpuWattNvidia[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">{{ i }}</li>
+                <li class="gpuLi">{{ gpuHashrateNvidia[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">{{ Number(gpuTemperatureNvidia[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
+                <li class="gpuLi">{{ gpuWattNvidia[key - 1][i - 1] || "undefined" }} W</li>
+                <li class="gpuLi">{{ gpuNameNvidia[key - 1][i - 1] || "undefined" }}</li>                
               </ul>
             </div>
             <div v-if='brand=="Amd"'>
               <ul v-for="i in gpuNumberAmd[key - 1]" :key="i" class="black--text gpuUl">
-                <li class="gpuLi">GPU : {{ i }}</li>
-                <li class="gpuLi">temperature: {{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }}</li>
-                <li class="gpuLi">hashrate: {{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
-                <li class="gpuLi">watt: {{ gpuWattAmd[key - 1][i - 1] || "undefined" }}</li> -->
+                <li class="gpuLi">{{ i }}</li>
+                <li class="gpuLi">{{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
+                <li class="gpuLi">{{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">{{ gpuWattAmd[key - 1][i - 1] || "undefined" }} W</li>
+                <li class="gpuLi">{{ gpuNameAmd[key - 1][i - 1] || "undefined" }}</li>
               </ul>
             </div>
-
           </v-card>      
         </v-dialog>
-
       </v-flex>
+
+      <v-flex xs16 sm16 md6 lg6>
+        <v-dialog v-model="rigGraph" width="75%">
+          <v-card class="infoCard rounded-card" color="black">
+            <h1 class="white--text">Grafana Graphs</h1>
+          </v-card>      
+        </v-dialog>
+      </v-flex>
+
     </div>
   </v-app>
 </template>
@@ -115,8 +136,10 @@ export default {
   name: 'App',
   data() {
     return {
+      testName: [],
       url: 'https://chosn-server.now.sh/db/',
       i: 0,
+      disableSwitch: [],
 
       coin: [],
       algo: [],
@@ -140,7 +163,8 @@ export default {
       gpuTemperatureNvidia: [], 
       gpuWattNvidia: [], 
       gpuCClockNvidia: [], 
-      gpuMClockNvidia: [], 
+      gpuMClockNvidia: [],
+      gpuNameNvidia: [],
 
       gpuNumberAmd: [],
       gpuUtilizationAmd: [],
@@ -149,9 +173,11 @@ export default {
       gpuWattAmd: [], 
       gpuCClockAmd: [], 
       gpuMClockAmd: [], 
-      
+      gpuNameAmd: [],
+
       brand: undefined,
       gpuDialog: false,
+      rigGraph: false,
       key: 0,
 
       editList: ["System", "Coins", "Overclocks"],
@@ -190,7 +216,8 @@ export default {
       this.gpuTemperatureNvidia = [], 
       this.gpuWattNvidia = [], 
       this.gpuCClockNvidia = [], 
-      this.gpuMClockNvidia = [], 
+      this.gpuMClockNvidia = [],
+      this.gpuNameNvidia = [],
 
       this.gpuNumberAmd = [],
       this.gpuUtilizationAmd = [],
@@ -199,6 +226,7 @@ export default {
       this.gpuWattAmd = [], 
       this.gpuCClockAmd = [], 
       this.gpuMClockAmd = [], 
+      this.gpuNameAmd = [], 
       
       this.brand = undefined,
       this.gpuDialog = false
@@ -264,14 +292,18 @@ export default {
         let gpuHashTemp = []
         let gpuTempTemp = []
         let gpuWattTemp = []
+        let gpuNameTemp = []
         for (let j = 0; j < response.data[i].Nvidia.GPU.length; j++) {
           gpuHashTemp.push(response.data[i].Nvidia.GPU[j].Hashrate)
           gpuTempTemp.push(response.data[i].Nvidia.GPU[j].Temperature)
-          gpuWattTemp.push(response.data[i].Nvidia.GPU[j].Watt)         
+          gpuWattTemp.push(response.data[i].Nvidia.GPU[j].Watt)
+          gpuNameTemp.push((response.data[i].Nvidia.GPU[j].Name).replace(/GeForce GTX/, ''))   
         }
         this.gpuHashrateNvidia[i] = gpuHashTemp
         this.gpuTemperatureNvidia[i] = gpuTempTemp
         this.gpuWattNvidia[i] = gpuWattTemp
+        this.gpuNameNvidia[i] = gpuNameTemp
+        console.log(this.gpuHashrateNvidia, this.gpuTemperatureNvidia, this.gpuWattNvidia, this.gpuNameNvidia)
       } else {
         this.hashrateAmd[i] = response.data[i].Amd["Total Hashrate"]
         this.temperatureAmd[i] = response.data[i].Amd["Avg Temperature"]
@@ -280,15 +312,18 @@ export default {
         let gpuHashTemp = []
         let gpuTempTemp = []
         let gpuWattTemp = []
+        let gpuNameTemp = []
         for (let j = 0; j < response.data[i].Amd.GPU.length; j++) {
           gpuHashTemp.push(response.data[i].Amd.GPU[j].Hashrate)
           gpuTempTemp.push(response.data[i].Amd.GPU[j].Temperature)
           gpuWattTemp.push(response.data[i].Amd.GPU[j].Watt)
+          gpuNameTemp.push(response.data[i].Amd.GPU[j].Name) 
         }
         this.gpuHashrateAmd[i] = gpuHashTemp
         this.gpuTemperatureAmd[i] = gpuTempTemp
         this.gpuWattAmd[i] = gpuWattTemp
-        console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd)
+        this.gpuNameAmd[i] = gpuNameTemp
+        console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd, this.gpuNameAmd)
       }
     }
   },
@@ -305,40 +340,35 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
+.textColor{
+  color: white;
+}
 .content{
   position: fixed;
   left: 0;
   right: 0;
-  z-index: 9999;
+  z-index: 2;
   margin-left: 20px;
   margin-right: 20px;
 }
-.background{
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  display: block;
-  background-image: url(../assets/btc.jpeg);
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
-}
-.roundImg{
-  border-radius: 50%;
-}
 .editBtn{
-  top: -14px;
+  top: -5px;
+  left: 10px
 }
 .infoCard {
   margin-left: auto;
   margin-right: auto;
 }
 .rounded-card {
-  border-radius:20px;
+  border-radius:30px;
+}
+.rigCard{
+  box-shadow: 0 14px 28px rgba(0,0,0), 5px 10px 10px rgba(0,0,0);
+  background-color:rgba(0,0,0,0.45);
+}
+.rigCard:hover{
+  box-shadow: 0 14px 28px rgba(255,255,255,0.25), 0 10px 10px rgba(255,255,255,0.22);
 }
 .gpuUl {
   width: 100%;
@@ -347,6 +377,7 @@ export default {
   display: table;
 }
 .gpuLi {
+  width: 20%;
   text-decoration: none;
   letter-spacing: 0.10em;
   display: inline-block;
@@ -354,9 +385,23 @@ export default {
   position: relative;
   color: white;
 }
-.rigUl {
+.rigUlGreen {
+  z-index: 9999;
   display: table;
   margin: 0;
+}
+.rigUlGreen:hover { 
+  width: 100%;
+  background-color: rgba(154, 205, 50, 0.5); 
+}
+.rigUlRed {
+  z-index: 9999;
+  display: table;
+  margin: 0;
+}
+.rigUlRed:hover { 
+  width: 100%;
+  background-color: rgba(223, 3, 3, 0.5); 
 }
 .rigLi {
   text-decoration: none;
@@ -364,27 +409,6 @@ export default {
   display: inline-block;
   position: relative;
   text-align: center;
-}
-.rigLi:after {    
-  background: none repeat scroll 0 0 transparent;
-  bottom: 0;
-  content: "";
-  display: block;
-  height: 1px;
-  left: 50%;
-  position: absolute;
-  background: white;
-  transition: width 0.3s ease 0s, left 0.3s ease 0s;
-  width: 0;
-}
-.rigLi:hover:after { 
-  width: 90px; 
-  left: -5px; 
-}
-@media screen and (max-height: 300px) {
-	ul {
-		margin-top: 40px;
-	}
 }
 .span-text {
   vertical-align:50%;
