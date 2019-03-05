@@ -1,10 +1,11 @@
 <template>
   <v-app>
-    <div class="background">
-      
+    <div class="background"></div>
+    <div class="content">  
+
       <h1 class="white--text centerText pa-2">Coins Configurator {{ id.toUpperCase() }}</h1>
-        
-      </div>
+    
+    </div>
   </v-app>
 </template>
 
