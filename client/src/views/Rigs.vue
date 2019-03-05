@@ -43,8 +43,6 @@
               <v-divider color="#F0E296"></v-divider>
 
               <div class="pt-2">
-<!--                <img v-if='rigStatus[rig - 1]' src="../assets/alive.gif" height="40" class="pl-3" fill-height>
-                <img v-else src="../assets/flatline.gif" height="40" class="pl-3" fill-height> -->
                 <v-menu offset-y>
                   <v-btn slot="activator" color="transparent" class="white--text editBtn">Edit</v-btn>
                   <v-list>
@@ -63,7 +61,7 @@
                     <v-list-tile
                       v-for="(item, index) in actionList"
                       :key="index"
-                      :to="{ name: item, params: { id: rigHostname[rig - 1] } }"
+                      @click="action(index)"
                     >
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
@@ -136,7 +134,6 @@ export default {
   name: 'App',
   data() {
     return {
-      testName: [],
       url: 'https://chosn-server.now.sh/db/',
       i: 0,
       disableSwitch: [],
@@ -185,6 +182,12 @@ export default {
     };
   },
   methods: {
+    action(index) {
+      if (index == 1) {
+        var win = window.open("http://localhost:4200", '_noblank')
+        win.focus()
+      }
+    },
     hashrateOver(brand, key) {
       this.gpuDialog = !this.gpuDialog
       if (brand == "nvidia") {
@@ -303,7 +306,7 @@ export default {
         this.gpuTemperatureNvidia[i] = gpuTempTemp
         this.gpuWattNvidia[i] = gpuWattTemp
         this.gpuNameNvidia[i] = gpuNameTemp
-        console.log(this.gpuHashrateNvidia, this.gpuTemperatureNvidia, this.gpuWattNvidia, this.gpuNameNvidia)
+        // console.log(this.gpuHashrateNvidia, this.gpuTemperatureNvidia, this.gpuWattNvidia, this.gpuNameNvidia)
       } else {
         this.hashrateAmd[i] = response.data[i].Amd["Total Hashrate"]
         this.temperatureAmd[i] = response.data[i].Amd["Avg Temperature"]
@@ -323,7 +326,7 @@ export default {
         this.gpuTemperatureAmd[i] = gpuTempTemp
         this.gpuWattAmd[i] = gpuWattTemp
         this.gpuNameAmd[i] = gpuNameTemp
-        console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd, this.gpuNameAmd)
+        // console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd, this.gpuNameAmd)
       }
     }
   },
