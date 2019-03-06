@@ -355,14 +355,6 @@ export default {
 .textColor{
   color: white;
 }
-.content{
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  margin-left: 20px;
-  margin-right: 20px;
-}
 .editBtn{
   top: -5px;
   left: 10px
