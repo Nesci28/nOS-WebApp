@@ -29,13 +29,6 @@ export default {
 </script>
 
 <style>
-.background{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: url(../assets/btc.jpeg);
-  height: 100%;
-  background-size: cover;
-}
+
 </style>
 

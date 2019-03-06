@@ -183,15 +183,6 @@ export default {
   color: white;
   text-decoration-color: white;
 }
-
-.background{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: url(../assets/btc.jpeg);
-  height: 100%;
-  background-size: cover;
-}
 .right{
   right: -5%;
 }
