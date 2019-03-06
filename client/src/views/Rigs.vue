@@ -5,18 +5,20 @@
     <div class="content">
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
-          <v-card v-bind:class="{ flashingCard: disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
-            
-              <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
-              <v-switch
-                v-if='!rigStatus[rig - 1]'
-                v-model="disableSwitch[rig - 1]"
-                color="red"
-                class="pt-2 pl-3"
-                dark
-              ></v-switch>
-              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">Last seen : {{ rigSeen[rig - 1] }} ago</h2> 
-              <hr style="clear:both;" color="#F0E296"/>
+          
+          <v-card v-bind:class="{ flashingCard: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
+            <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
+            <v-switch
+              style="text-align:left;float:left;"
+              v-if='!rigStatus[rig - 1]'
+              v-model="disableSwitch[rig - 1]"
+              color="red"
+              height=0.01
+              class="lastSeen mt-3 ml-5"
+              dark
+            ></v-switch>
+            <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">{{ rigSeen[rig - 1] }} ago</h2> 
+            <hr style="clear:both;" color="#F0E296"/>
             
             <div>
               <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUlGreen white--text">
@@ -25,9 +27,12 @@
                 </li>
                 <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ coin[rig - 1][0] }}</li>
                 <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ algo[rig - 1][0] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ temperatureNvidia[rig - 1] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ wattNvidia[rig - 1] }} W</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ temperatureNvidia[rig - 1] }}</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ wattNvidia[rig - 1] }} W</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
               <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUlRed white--text">
@@ -36,9 +41,12 @@
                 </li>
                 <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ coin[rig - 1][1] }}</li>
                 <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ algo[rig - 1][1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ temperatureAmd[rig - 1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ wattAmd[rig - 1] }} W</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ temperatureAmd[rig - 1] }}</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ wattAmd[rig - 1] }} W</li>
+                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
 
@@ -348,7 +356,7 @@ export default {
   color: white;
 }
 .content{
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
   z-index: 2;
