@@ -63,7 +63,7 @@
         </transition>
       </v-content>
 
-    <v-footer fixed color="black" class="pa-3">
+    <v-footer app fixed color="black" class="pa-3">
       <pre class="white--text pr-2">Marc Gagnon</pre>
       <pre class="white--text">(Chosn WebApp - Portfolio) &copy; 2019</pre>
       <v-spacer></v-spacer>
@@ -102,16 +102,11 @@
 
 <style>
 .content{
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 2;
+  position: absolute;
   margin-left: 20px;
   margin-right: 20px;
 }
 .background{
-  top: -10px;
-  z-index: 1;
   background: url(./assets/btc.jpeg) no-repeat center center fixed;
   background-size: cover;
   filter: blur(4px);
