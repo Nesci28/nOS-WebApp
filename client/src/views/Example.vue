@@ -178,14 +178,6 @@ export default {
 </script>
 
 <style scoped>
-.background{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: url(../assets/btc.jpeg);
-  height: 100%;
-  background-size: cover;
-}
 .roundImg{
   border-radius: 50%;
 }

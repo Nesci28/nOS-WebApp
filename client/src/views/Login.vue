@@ -82,15 +82,6 @@ export default {
   font-size: 30px;
   margin: 18px 0;
 }
-
-.background{
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-  background: url(../assets/btc.jpeg);
-  height: 100%;
-  background-size: cover;
-}
 .login-box{
   width: 50%;
   left: 50%;
