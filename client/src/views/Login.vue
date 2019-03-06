@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <div class="background"></div>
-    <div class="content">
+    <div class="contentLogin">
       <v-form v-on:submit="checkLogin" class="login-box pt-5">
         <v-btn flat @click="example" color="#F0E296" class="hidden-sm-and-down exampleVertical">View an Example</v-btn>
         <h1>Login</h1>
