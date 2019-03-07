@@ -1,10 +1,9 @@
 <template>
   <v-app>
     <div class="background"></div>
-
     <div class="content">
       <v-layout row wrap>
-        <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">
+        <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4>
           
           <v-card v-bind:class="{ flashingCard: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
             <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 

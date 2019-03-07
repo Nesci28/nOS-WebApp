@@ -178,7 +178,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .inputGroup{
   color: white;
   text-decoration-color: white;
