@@ -56,12 +56,11 @@
     </v-list>
     </v-navigation-drawer>
 
-    
-      <v-content>
-        <transition name="router-anim">
-          <router-view/>
-        </transition>
-      </v-content>
+    <v-content>
+      <transition name="router-anim">
+        <router-view />
+      </transition>
+    </v-content>
 
     <v-footer fixed color="black" class="pa-3">
       <pre class="white--text pr-2">Marc Gagnon</pre>
@@ -101,29 +100,17 @@
 </script>
 
 <style>
-.contentLogin{
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 2;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.content{
-  position: absolute;
-  z-index: 1;
-  margin-left: 20px;
-  margin-right: 20px;
-}
 .background{
-  top: -10px;
-  z-index: 1;
-  background: url(./assets/btc.jpeg) no-repeat center center fixed;
-  background-size: cover;
-  filter: blur(4px);
-  transform: scale(1.02);
-  background-attachment: fixed;
-  height:100%;
+    background-image:url(./assets/btc_blur.jpg);
+    background-size: cover;
+    background-repeat:no-repeat;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-background-size: cover;
+    -ms-content-zooming: none;
+    position:absolute;
+    width:100%;
+    height:100%;
 }
 .router-anim-enter-active {
   animation: coming .5s;

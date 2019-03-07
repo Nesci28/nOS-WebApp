@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "npm install && vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "npm run build && now --public && now alias chosn && now scale chosn 1 auto"
+    "deploy": "npm run build && now --public && now alias chosn"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
