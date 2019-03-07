@@ -1,6 +1,5 @@
 <template>
-  <v-app>
-    <div class="background"></div>
+  <v-app class="background">
       <div class="content">
       <v-layout row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4 class="tableTest">

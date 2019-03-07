@@ -1,9 +1,8 @@
 <template>
   <v-app>
     <div class="background"></div>
-    <div class="contentLogin">
-      <v-form v-on:submit="checkLogin" class="login-box pt-5">
-        <v-btn flat @click="example" color="#F0E296" class="hidden-sm-and-down exampleVertical">View an Example</v-btn>
+      <v-form v-on:submit="checkLogin" class="login-box">
+        <v-btn v-if="windowWidth > 800" flat @click="example" color="#F0E296" class="exampleVertical">View an Example</v-btn>
         <h1>Login</h1>
 
         <div class="textbox">
@@ -17,11 +16,10 @@
         </div>
 
         <v-btn flat @click="checkLogin" type="submit" color="#F0E296" class="btn">Login</v-btn>
-        <v-btn flat @click="example" color="#F0E296" class="hidden-md-and-up btn">Example</v-btn>
+        <v-btn v-if="windowWidth < 800" flat @click="example" color="#F0E296" class="btn">Example</v-btn>
         <h3 class="white--text">Use the login information you configured your rigs with</h3>
-        
       </v-form>
-    </div>
+
   </v-app>
 </template>
 
@@ -35,17 +33,14 @@ export default {
         login: "",
         password: "",
       },
-      windowsWidth: 0,
-      smallScreen: false
+      windowWidth: null
     }
   },
   methods: {
     example() {
       this.$router.push('example')
     },
-    checkLogin() {
-      console.log('submit');
-      
+    checkLogin() {     
       if (this.user.login && this.user.password) {
         this.$store.state.username = this.user.login
         this.$store.state.password = this.user.password
@@ -56,7 +51,12 @@ export default {
     }
   },
   mounted() {
-
+    this.windowWidth = window.innerWidth
+    this.$nextTick(() => {
+      window.addEventListener('resize', () => {
+        this.windowWidth = window.innerWidth
+      });
+    })
   },
   created: function () {
     if (localStorage.username && localStorage.password) {
@@ -68,7 +68,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scope>
 .centerTitle{
   text-align: center;
 }
@@ -83,10 +83,9 @@ export default {
   margin: 18px 0;
 }
 .login-box{
-  width: 50%;
-  left: 50%;
-  transform: translate(-50%);
   position: absolute;
+  width: 50%;
+  transform: translate(50%, 0%);
   color: white;
 }
 .login-box h1{
