@@ -2,7 +2,6 @@
   <v-app>
     <div class="background"></div>
       <v-form v-on:submit="checkLogin" class="login-box">
-        <v-btn v-if="windowWidth > 800" flat @click="example" color="#F0E296" class="exampleVertical">View an Example</v-btn>
         <h1>Login</h1>
 
         <div class="textbox">
@@ -16,7 +15,6 @@
         </div>
 
         <v-btn flat @click="checkLogin" type="submit" color="#F0E296" class="btn">Login</v-btn>
-        <v-btn v-if="windowWidth < 800" flat @click="example" color="#F0E296" class="btn">Example</v-btn>
         <h3 class="white--text">Use the login information you configured your rigs with</h3>
       </v-form>
 
@@ -32,8 +30,7 @@ export default {
       user: {
         login: "",
         password: "",
-      },
-      windowWidth: null
+      }
     }
   },
   methods: {
@@ -49,14 +46,6 @@ export default {
         this.$router.push('rigs')
       }
     }
-  },
-  mounted() {
-    this.windowWidth = window.innerWidth
-    this.$nextTick(() => {
-      window.addEventListener('resize', () => {
-        this.windowWidth = window.innerWidth
-      });
-    })
   },
   created: function () {
     if (localStorage.username && localStorage.password) {
