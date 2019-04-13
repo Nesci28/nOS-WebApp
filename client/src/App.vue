@@ -1,17 +1,13 @@
 <template>
   <v-app style="background: black">
-
-    <v-toolbar app fixed color="black" class="white--text">
+    <v-toolbar app fixed color="black" class="white--text" extended extension-height="7">
+      <v-progress-linear slot="extension" :indeterminate="true" color="rgb(240, 226, 150)"></v-progress-linear>  
       <v-toolbar-side-icon @click.stop="drawer=!drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
       <v-divider vertical color="white" class="hidden-md-and-up"></v-divider>
-      <router-link to="/" class="toolbarHome pr-4">CHOSN</router-link>
-      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
-      <router-link v-if="isLoggedIn" to="/Coins" class="hidden-sm-and-down toolbar">Coins</router-link>
-      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
-      <router-link v-if="isLoggedIn" to="/Miners" class="hidden-sm-and-down toolbar">Miners</router-link>
+      <router-link to="/" class="toolbarHome pr-4">nOS</router-link>
       <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
       <span v-if="isLoggedIn" v-on:click="loggedOut" style="cursor: pointer" class="hidden-sm-and-down toolbar">Logout</span>
-
+      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn href="https://discord.gg/aPg5W2k" target="_noblank" class="hidden-sm-and-down" type="email" flat color="white">
@@ -67,11 +63,10 @@
       <pre class="white--text">(Chosn WebApp - Portfolio) &copy; 2019</pre>
       <v-spacer></v-spacer>
     </v-footer>
-
   </v-app>
 </template>
 
-<script>
+<script> 
   export default {
     data() {
       return {
@@ -100,15 +95,19 @@
 </script>
 
 <style>
+.box {
+	border: #000 solid 2px;
+  height: auto;
+}
 .background{
-    background-image:url(./assets/btc_blur.jpg);
+    background-image:linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)), url(./assets/nOSWallpaper.jpg);
     background-size: cover;
     background-repeat:no-repeat;
     -moz-background-size: cover;
     -o-background-size: cover;
     -webkit-background-size: cover;
     -ms-content-zooming: none;
-    position:absolute;
+    position:fixed;
     width:100%;
     height:100%;
 }
