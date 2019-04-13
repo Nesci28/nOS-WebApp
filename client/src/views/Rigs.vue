@@ -2,11 +2,11 @@
   <v-app>
     <div class="background"></div>
     <div class="content">
-      <v-layout row wrap>
+      <v-layout class="pt-5" row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4>
           
           <v-card v-bind:class="{ flashingCard: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
-            <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1].toUpperCase() }}</h1> 
+            <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1] }}</h1> 
             <v-switch
               style="text-align:left;float:left;"
               v-if='!rigStatus[rig - 1]'
@@ -28,9 +28,9 @@
                 <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ algo[rig - 1][0] }}</li>
                 <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ temperatureNvidia[rig - 1] }}</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(temperatureNvidia[rig - 1]) }} °C</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ wattNvidia[rig - 1] }} W</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(wattNvidia[rig - 1]) }} W</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
@@ -42,9 +42,9 @@
                 <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ algo[rig - 1][1] }}</li>
                 <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ temperatureAmd[rig - 1] }}</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(temperatureAmd[rig - 1]) }} °C</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ wattAmd[rig - 1] }} W</li>
+                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(wattAmd[rig - 1]) }} W</li>
                 <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
               </ul>
               <v-divider color="#F0E296"></v-divider>
@@ -52,7 +52,7 @@
               <div class="pt-2">
                 <v-menu offset-y>
                   <v-btn slot="activator" color="transparent" class="white--text editBtn">Edit</v-btn>
-                  <v-list>
+                  <v-list dark>
                     <v-list-tile
                       v-for="(item, index) in editList"
                       :key="index"
@@ -63,12 +63,24 @@
                   </v-list>
                 </v-menu>
                 <v-menu offset-y>
+                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Logs</v-btn>
+                  <v-list dark>
+                    <v-list-tile
+                      v-for="(item, index) in logsList"
+                      :key="index"
+                      :to="{ name: 'logs', params: { id: rigHostname[rig - 1] } }"
+                    >
+                      <v-list-tile-title>{{ item }}</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
+                <v-menu offset-y>
                   <v-btn slot="activator" color="transparent" class="white--text editBtn">Actions</v-btn>
-                  <v-list>
+                  <v-list dark>
                     <v-list-tile
                       v-for="(item, index) in actionList"
                       :key="index"
-                      @click="action(index)"
+                      @click="action(index, rigHostname[rig - 1])"
                     >
                       <v-list-tile-title>{{ item }}</v-list-tile-title>
                     </v-list-tile>
@@ -88,10 +100,10 @@
             <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2" primary-title>
             {{ brand }}
             </v-card-title>
-            <v-card-title v-if='brand=="Amd"' class="red--text headline black lighten-2" primary-title>
+            <v-card-title v-if='brand=="Amd"' class="red--text headline lighten-2" primary-title>
             {{ brand }}
             </v-card-title>
-            <ul class="black--text gpuUl">
+            <ul class="white--text gpuUl">
               <li class="gpuLi">GPU #</li>
               <li class="gpuLi">hashrate</li>
               <li class="gpuLi">temperature</li>
@@ -101,16 +113,16 @@
             <v-divider color="#F0E296"></v-divider>
 
             <div v-if='brand=="Nvidia"'>
-              <ul v-for="i in gpuNumberNvidia[key - 1]" :key="i" class="black--text gpuUl">
+              <ul v-for="i in gpuNumberNvidia[key - 1]" :key="i" class="white--text gpuUl">
                 <li class="gpuLi">{{ i }}</li>
                 <li class="gpuLi">{{ gpuHashrateNvidia[key - 1][i - 1] || "undefined" }}</li>
                 <li class="gpuLi">{{ Number(gpuTemperatureNvidia[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
-                <li class="gpuLi">{{ gpuWattNvidia[key - 1][i - 1] || "undefined" }} W</li>
+                <li class="gpuLi">{{ gpuWattNvidia[key - 1][i - 1] || "undefined" }}</li>
                 <li class="gpuLi">{{ gpuNameNvidia[key - 1][i - 1] || "undefined" }}</li>                
               </ul>
             </div>
             <div v-if='brand=="Amd"'>
-              <ul v-for="i in gpuNumberAmd[key - 1]" :key="i" class="black--text gpuUl">
+              <ul v-for="i in gpuNumberAmd[key - 1]" :key="i" class="white--text gpuUl">
                 <li class="gpuLi">{{ i }}</li>
                 <li class="gpuLi">{{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
                 <li class="gpuLi">{{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
@@ -141,7 +153,7 @@ export default {
   name: 'App',
   data() {
     return {
-      url: 'https://chosn-server.now.sh/db/',
+      url: 'https://nos-server.now.sh/db/',
       i: 0,
       disableSwitch: [],
 
@@ -153,7 +165,8 @@ export default {
       rigHostname: [],
       rigStatus: [],
       rigBrand: [],
-      
+      rigSSH: null,
+
       hashrateNvidia: [],
       hashrateAmd: [],
       temperatureNvidia: [],
@@ -185,14 +198,31 @@ export default {
       key: 0,
 
       editList: ["System", "Coins", "Overclocks"],
-      actionList: ["Restart", "SSH"]
+      logsList: ["Miners"],
+      actionList: ["SSH", "Restart nOS", "Restart Rig", "Shutdown Rig"],
+
+      APITimer: undefined
     };
   },
   methods: {
-    action(index) {
-      if (index == 1) {
-        var win = window.open("http://localhost:4200", '_noblank')
+    createCmdObject(hostname, cmd) {
+      return {
+        "username": this.$store.state.username,
+        "password": this.$store.state.password,
+        "hostname": hostname,
+        "command": cmd
+      }
+    },
+    action(index, hostname) {
+      if (index == 0) {
+        let win = window.open(this.rigSSH, '_noblank')
         win.focus()
+      } else if (index == 1) {
+        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'start'))
+      } else if (index == 2) {
+        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'sudo shutdown -r now'))
+      } else if (index == 2) {
+        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'sudo shutdown now'))
       }
     },
     hashrateOver(brand, key) {
@@ -212,6 +242,7 @@ export default {
       this.rigHostname = [],
       this.rigStatus = [],
       this.rigBrand = [],
+      this.rigSSH = null,
 
       this.hashrateNvidia = [],
       this.hashrateAmd = [],
@@ -252,7 +283,7 @@ export default {
           this.rigHostname = new Set()
           for (let i = 0; i < response.data.length; i++) {
             this.rigHostname.add(response.data[i].Hostname)
-            
+            this.rigSSH = response.data[i].Shellinabox
             this.rigNumber.push(i + 1)
 
             let now = + new Date()
@@ -291,7 +322,9 @@ export default {
           }
           this.rigHostname = Array.from(this.rigHostname)
           //console.log(this.coin, this.algo, this.hashrateNvidia, this.temperatureNvidia, this.wattNvidia, this.hashrateAmd, this.temperatureAmd, this.wattAmd, this.rigNumber, this.rigHostname, this.rigStatus, this.rigSeen, this.rigBrand)
+          this.$store.state.json = response.data
         })
+      this.APITimer = setTimeout(this.rigInfo, 30000)
     },
     getGpuInfo(i, brand, response) {
       if (brand == "Nvidia") {
@@ -343,8 +376,10 @@ export default {
     } else {
       console.log("db initialized")
       this.rigInfo()
-      setInterval(this.rigInfo, 30000)
     }
+  },
+  destroyed() {
+    clearTimeout(this.APITimer);
   }
 }
 
@@ -366,13 +401,14 @@ export default {
   border-radius:30px;
 }
 .rigCard{
-  box-shadow: 0 14px 28px rgba(0,0,0), 5px 10px 10px rgba(0,0,0);
-  background-color:rgba(0,0,0,0.45);
+  border: 5px solid rgb(240, 226, 150);
+  background:rgba(255,255,255,0.10);
 }
 .rigCard:hover{
-  box-shadow: 0 14px 28px rgba(255,255,255,0.25), 0 10px 10px rgba(255,255,255,0.22);
+  box-shadow: 0 28px 36px rgba(240, 226, 150,0.25), 0 10px 10px rgba(240, 226, 150,0.22);
 }
 .gpuUl {
+  background: black;
   width: 100%;
   margin: 0;
   padding: 0;
