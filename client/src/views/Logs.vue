@@ -42,7 +42,6 @@ export default {
       this.logs.Amd = this.$store.state.json.filter(ele => ele["Hostname"] == this.id)[0].Amd["Miner Log"]
       // console.log(this.id, nvidiaLogs, amdLogs)
       if (this.logs.Nvidia) {
-        console.log(this.logsParser(this.logs.Nvidia))
         this.logs.Nvidia = this.logsParser(this.logs.Nvidia)
       }
       if (this.logs.Amd) {
