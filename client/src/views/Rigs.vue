@@ -172,7 +172,8 @@ export default {
   name: 'App',
   data() {
     return {
-      url: 'https://nos-server.now.sh/db/',
+      urlGet: 'https://nos-server.now.sh/db/',
+      // urlGet: "http://localhost:5000/db",
       urlCommand: 'https://nos-server.now.sh/command/',
       urlDelete: 'https://nos-server.now.sh/delete/',
       i: 0,
@@ -233,7 +234,7 @@ export default {
       this.confirmText = ''
     },
     deleteRig(hostname) {
-      axios.post(urlDelete, {
+      axios.post(this.urlDelete, {
         "username": this.$store.state.username,
         "password": this.$store.state.password,
         "hostname": hostname,
@@ -252,11 +253,11 @@ export default {
         let win = window.open(this.rigSSH, '_noblank')
         win.focus()
       } else if (index == 1) {
-        axios.post(urlCommand, this.createCmdObject(hostname, 'start'))
+        axios.post(this.urlCommand, this.createCmdObject(hostname, 'start'))
       } else if (index == 2) {
-        axios.post(urlCommand, this.createCmdObject(hostname, 'sudo shutdown -r now'))
+        axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown -r now'))
       } else if (index == 2) {
-        axios.post(urlCommand, this.createCmdObject(hostname, 'sudo shutdown now'))
+        axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown now'))
       }
     },
     hashrateOver(brand, key) {
@@ -308,9 +309,10 @@ export default {
     },
     rigInfo() {
       this.returnToDefaults()
-
-      axios
-        .get(this.url + this.$store.state.username + '/' + this.$store.state.password)
+      axios.post(this.urlGet, {
+          username: this.$store.state.username,
+          password: this.$store.state.password
+        })
         .then(response => {
           console.log(response.data)
 

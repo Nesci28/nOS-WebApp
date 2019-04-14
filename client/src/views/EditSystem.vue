@@ -39,9 +39,8 @@ export default {
     onMounted(editor) {
       this.editor = editor;
     },
-    defaults(step) {
-      let configs = this.$store.state.json.filter(ele => ele["Hostname"] == this.id)[0]["System Config"]
-      console.log(configs)
+    async defaults(step) {
+      let configs = await this.$store.state.json.filter(ele => ele["Hostname"] == this.id)[0]["System Config"]
       if (step == 'saved') {
         configs.Serial = configs.Serial + 1
       }
