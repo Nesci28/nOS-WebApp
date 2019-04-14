@@ -15,10 +15,11 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/db', (req, res) => {
+app.post('/db', (req, res) => {
   const user = req.body.username
   const password = req.body.password
   const hostname = req.body.hostname
+  console.log(user, password)
   if (hostname == undefined) {
     rigsInfo
       .find({"Username": user, "Password": password})

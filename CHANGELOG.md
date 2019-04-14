@@ -9,6 +9,7 @@ __Back-End__
 - Deals with API from the Front-End and the Rig itself
 - Created a now.json
 - Sensible information is now in a dotenv file
+- Changed /db endpoint to a POST
 
 [12-04-2019] 
 - UI overhaul
