@@ -1,4 +1,4 @@
-[Changelog]()
+[Changelog](https://github.com/Nesci28/nOS-WebApp/blob/master/CHANGELOG.md)
 
 # Server
 ### Install
@@ -14,7 +14,7 @@ webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/
 
 ### Deploy
 ```bash
-webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/server; now --public && now alias nOS-server; now scale nos-server.now.sh all auto
+webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/server; now --public && now alias nOS-server; now scale nos-server.now.sh 1 auto
 ```
 
 # Client
@@ -32,5 +32,5 @@ webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/
 
 ### Deploy
 ```bash
-webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/client; sudo npm run deploy; now scale node-os.now.sh all auto
+webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/client; sudo npm run deploy; now scale node-os.now.sh 1 auto
 ```

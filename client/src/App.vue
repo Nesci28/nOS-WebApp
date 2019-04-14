@@ -1,5 +1,5 @@
 <template>
-  <v-app style="background: black">
+  <v-app style="background: rgb(46, 46, 46)">
     <v-toolbar app fixed color="black" class="white--text" extended extension-height="7">
       <v-progress-linear slot="extension" :indeterminate="true" color="rgb(240, 226, 150)"></v-progress-linear>  
       <v-toolbar-side-icon @click.stop="drawer=!drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
@@ -24,17 +24,6 @@
       dark
     >
     <v-list class="pt-0" dense>
-      <v-list-tile v-if="isLoggedIn" to="/Coins" onclick="location.reload(true)">
-        <v-list-tile-content >
-          <v-list-tile-title>Coins</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-list-tile v-if="isLoggedIn" to="/Miners" onclick="location.reload(true)">
-        <v-list-tile-content>
-          <v-list-tile-title>Miners</v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-      <v-divider></v-divider>
       <v-list-tile v-if="isLoggedIn" to="/" @click="loggedOut">
         <v-list-tile-content>
           <v-list-tile-title>  
@@ -100,16 +89,17 @@
   height: auto;
 }
 .background{
-    background-image:linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)), url(./assets/nOSWallpaper.jpg);
-    background-size: cover;
-    background-repeat:no-repeat;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    -webkit-background-size: cover;
-    -ms-content-zooming: none;
-    position:fixed;
-    width:100%;
-    height:100%;
+    /* background-image:linear-gradient(rgba(0,0,0,0.50), rgba(0,0,0,0.50)), url(./assets/nOSWallpaper.jpg); */
+  background-color: rgb(46, 46, 46);
+  background-size: cover;
+  background-repeat:no-repeat;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+  -ms-content-zooming: none;
+  position:fixed;
+  width:100%;
+  height:100%;
 }
 .router-anim-enter-active {
   animation: coming .5s;
