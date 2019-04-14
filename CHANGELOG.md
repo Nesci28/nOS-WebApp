@@ -8,6 +8,7 @@ __Back-End__
 - New endpoints "/delete"
 - Deals with API from the Front-End and the Rig itself
 - Created a now.json
+- Sensible information is now in a dotenv file
 
 [12-04-2019] 
 - UI overhaul
