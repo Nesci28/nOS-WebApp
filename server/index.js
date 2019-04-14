@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const monk = require('monk');
-require('dotenv').config();
+require('dotenv').config({ path: './info.env' });
 
 const db = monk(`${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_URL}`);
 const rigsInfo = db.get(`${process.env.DB_COLLECTION}`);
