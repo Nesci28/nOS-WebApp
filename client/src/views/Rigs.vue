@@ -87,6 +87,7 @@
                   </v-list>
                 </v-menu>
                 <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
+                <v-btn @click="btnDelete" color="error" class="black--text editBtn">Delete</v-btn>
               </div>
             </div>
           </v-card>
@@ -95,12 +96,30 @@
       </v-layout>
       
       <v-flex xs16 sm16 md6 lg6>
+        <v-dialog v-model="deleteCard" width="75%">
+          <v-card class="infoCard rounded-card">
+            <v-card-title class="red--text headline lighten-2 cardTitle" primary-title>
+            Delete this rig ?
+            </v-card-title>
+            <v-text-field
+                class="confirmBox pr-5 pl-5 pt-5"
+                color="white"
+                label="Write 'DELETE' to confirm"
+                v-model="confirmText"
+                outline
+              ></v-text-field>
+              <v-btn v-if="confirmText == 'DELETE'" color="warning" class="deleteBtn">Confirm</v-btn>
+          </v-card>      
+        </v-dialog>
+      </v-flex>
+
+      <v-flex xs16 sm16 md6 lg6>
         <v-dialog v-model="gpuDialog" width="75%">
-          <v-card class="infoCard rounded-card" color="black">
-            <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2" primary-title>
+          <v-card class="infoCard rounded-card">
+            <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2 cardTitle" primary-title>
             {{ brand }}
             </v-card-title>
-            <v-card-title v-if='brand=="Amd"' class="red--text headline lighten-2" primary-title>
+            <v-card-title v-if='brand=="Amd"' class="red--text headline lighten-2 cardTitle" primary-title>
             {{ brand }}
             </v-card-title>
             <ul class="white--text gpuUl">
@@ -136,7 +155,7 @@
 
       <v-flex xs16 sm16 md6 lg6>
         <v-dialog v-model="rigGraph" width="75%">
-          <v-card class="infoCard rounded-card" color="black">
+          <v-card class="infoCard rounded-card">
             <h1 class="white--text">Grafana Graphs</h1>
           </v-card>      
         </v-dialog>
@@ -154,6 +173,8 @@ export default {
   data() {
     return {
       url: 'https://nos-server.now.sh/db/',
+      urlCommand: 'https://nos-server.now.sh/command/',
+      urlDelete: 'https://nos-server.now.sh/delete/',
       i: 0,
       disableSwitch: [],
 
@@ -195,6 +216,8 @@ export default {
       brand: undefined,
       gpuDialog: false,
       rigGraph: false,
+      deleteCard: false,
+      confirmText: '',
       key: 0,
 
       editList: ["System", "Coins", "Overclocks"],
@@ -205,6 +228,17 @@ export default {
     };
   },
   methods: {
+    btnDelete() {
+      this.deleteCard = !this.deleteCard
+      this.confirmText = ''
+    },
+    deleteRig(hostname) {
+      axios.post(urlDelete, {
+        "username": this.$store.state.username,
+        "password": this.$store.state.password,
+        "hostname": hostname,
+      })
+    },
     createCmdObject(hostname, cmd) {
       return {
         "username": this.$store.state.username,
@@ -218,11 +252,11 @@ export default {
         let win = window.open(this.rigSSH, '_noblank')
         win.focus()
       } else if (index == 1) {
-        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'start'))
+        axios.post(urlCommand, this.createCmdObject(hostname, 'start'))
       } else if (index == 2) {
-        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'sudo shutdown -r now'))
+        axios.post(urlCommand, this.createCmdObject(hostname, 'sudo shutdown -r now'))
       } else if (index == 2) {
-        axios.post('http://localhost:5000/command', this.createCmdObject(hostname, 'sudo shutdown now'))
+        axios.post(urlCommand, this.createCmdObject(hostname, 'sudo shutdown now'))
       }
     },
     hashrateOver(brand, key) {
@@ -386,6 +420,15 @@ export default {
 </script>
 
 <style scoped>
+.deleteBtn{
+  margin-left: 4%;
+}
+.confirmBox{
+  color: white;
+}
+.cardTitle{
+  background-color: black;
+}
 .textColor{
   color: white;
 }
@@ -398,6 +441,7 @@ export default {
   margin-right: auto;
 }
 .rounded-card {
+  background-color: rgb(46, 46, 46);
   border-radius:30px;
 }
 .rigCard{
@@ -408,7 +452,7 @@ export default {
   box-shadow: 0 28px 36px rgba(240, 226, 150,0.25), 0 10px 10px rgba(240, 226, 150,0.22);
 }
 .gpuUl {
-  background: black;
+  /* background: black; */
   width: 100%;
   margin: 0;
   padding: 0;

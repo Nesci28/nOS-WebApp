@@ -1,4 +1,5 @@
 {
-  "name": "Chosn WebApp",
-  "type": "npm"
+  "name": "nOS WebApp",
+  "type": "npm",
+  "alias": "node-os"
 }
