@@ -14,7 +14,7 @@ webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/
 
 ### Deploy
 ```bash
-webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/server; now --public && now alias nOS-server; now scale nos-server.now.sh 1 auto
+webappFolder=$(find /home -type d -name Webapp 2>/dev/null); cd ${webappFolder}/server; now --public && now alias nOS-server; now scale nos-server.now.sh 1 auto; now rm "nOS Server" --safe
 ```
 
 # Client
