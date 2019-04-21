@@ -22,10 +22,15 @@
 </template>
 
 <script>
+const axios = require('axios');
+axios.defaults.withCredentials = true
+
 export default {
   name: 'App',
   data() {
     return {
+      urlGet: 'https://nos-server.now.sh/action/login',
+      // urlGet: "http://localhost:5000/action/login",
       loggedIn: false,
       user: {
         login: "",
@@ -34,25 +39,24 @@ export default {
     }
   },
   methods: {
-    example() {
-      this.$router.push('example')
-    },
-    checkLogin() {     
-      if (this.user.login && this.user.password) {
-        this.$store.state.username = this.user.login
-        this.$store.state.password = this.user.password
-        localStorage.username = this.user.login
-        localStorage.password = this.user.password
-        this.$router.push('rigs')
-      }
+    checkLogin() {
+      let dbEntry = axios.post(this.urlGet, {
+          username: this.user.login,
+          password: this.user.password
+        })        
+        .then(res => {
+          if (res.data != "not logged in!") {
+            window.location.reload()
+            this.$router.push('/rigs')
+          }
+        })
     }
   },
   created: function () {
-    if (localStorage.username && localStorage.password) {
-      this.$store.state.username = localStorage.username
-      this.$store.state.password = localStorage.password
-      this.$router.push('rigs')
-    }
+    axios.get(this.urlGet)
+      .then(res => {
+        if (res.data.isAuthenticated) this.$router.push('/rigs')
+      })
   }
 };
 </script>

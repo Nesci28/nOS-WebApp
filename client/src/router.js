@@ -6,6 +6,7 @@ import EditCoins from './views/EditCoins.vue';
 import EditOverclocks from './views/EditOverclocks.vue';
 import Rigs from './views/Rigs.vue';
 import Logs from './views/Logs.vue';
+import Download from './views/Download.vue';
 
 Vue.use(Router);
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/logs',
       name: 'logs',
       component: Logs,
+    },
+    {
+      path: '/download',
+      name: 'download',
+      component: Download,
     }
   ],
 });
