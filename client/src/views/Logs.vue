@@ -60,7 +60,7 @@ export default {
   border: 5px solid white;
   background: rgba(0,0,0,0.75);
   color: white;
-  z-index: 75;
+  z-index: 1;
 }
 </style>
 

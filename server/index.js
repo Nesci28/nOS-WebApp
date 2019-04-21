@@ -19,7 +19,7 @@ app.post('/db', (req, res) => {
   const user = req.body.username
   const password = req.body.password
   const hostname = req.body.hostname
-  console.log(user, password)
+  console.log(user, password, hostname)
   if (hostname == undefined) {
     rigsInfo
       .find({"Username": user, "Password": password})
@@ -41,6 +41,7 @@ const objectWithoutKey = (object, key) => {
 }
 
 app.post('/add', async (req, res) => {
+  console.log('test', req.body)
   if (req.body.info) {
     var user = req.body.info.Username
     var password = req.body.info.Password
