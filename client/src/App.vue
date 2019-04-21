@@ -1,11 +1,13 @@
 <template>
   <v-app style="background: rgb(46, 46, 46)">
-    <v-toolbar app fixed color="black" class="white--text" extended extension-height="7">
+    <v-toolbar app fixed color="black" class="white--text toolbarIndex" extended extension-height="7">
       <v-progress-linear slot="extension" :indeterminate="true" color="rgb(240, 226, 150)"></v-progress-linear>  
       <v-toolbar-side-icon @click.stop="drawer=!drawer" class="white--text hidden-md-and-up"></v-toolbar-side-icon>
       <v-divider vertical color="white" class="hidden-md-and-up"></v-divider>
       <router-link to="/" class="toolbarHome pr-4">nOS</router-link>
-      <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
+      <v-divider vertical color="white" class="hidden-sm-and-down"></v-divider>
+      <span v-on:click="download" style="cursor: pointer" class="hidden-sm-and-down toolbar">Download</span>
+      <v-divider vertical color="white" class="hidden-sm-and-down"></v-divider>
       <span v-if="isLoggedIn" v-on:click="loggedOut" style="cursor: pointer" class="hidden-sm-and-down toolbar">Logout</span>
       <v-divider v-if="isLoggedIn" vertical color="white" class="hidden-sm-and-down"></v-divider>
       <v-spacer></v-spacer>
@@ -18,12 +20,21 @@
     </v-toolbar>
 
     <v-navigation-drawer
+      class="menuIndex"
       v-model="drawer"
       absolute
       temporary
       dark
     >
     <v-list class="pt-0" dense>
+      <v-list-tile to="/download">
+        <v-list-tile-content>
+          <v-list-tile-title>  
+            <v-icon>backup</v-icon>
+          Download</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+
       <v-list-tile v-if="isLoggedIn" to="/" @click="loggedOut">
         <v-list-tile-content>
           <v-list-tile-title>  
@@ -47,7 +58,7 @@
       </transition>
     </v-content>
 
-    <v-footer fixed color="black" class="pa-3">
+    <v-footer fixed color="black" class="toolbarIndex pa-3">
       <pre class="white--text pr-2">Marc Gagnon</pre>
       <pre class="white--text">(Chosn WebApp - Portfolio) &copy; 2019</pre>
       <v-spacer></v-spacer>
@@ -56,34 +67,58 @@
 </template>
 
 <script> 
+const axios = require('axios');
+axios.defaults.withCredentials = true
+
   export default {
     data() {
       return {
         drawer: false,
+        isLoggedIn: false,
+        // urlGet: "http://localhost:5000/action/login",
+        // urlLogout: "http://localhost:5000/action/logout"
+        urlGet: "https://nos-server.now.sh/action/login",
+        urlLogout: "https://nos-server.now.sh/action/logout"
       }
     },
     methods: {
+      download() {
+        this.$router.push('/download')
+      },
       loggedOut() {
-        this.$store.state.username = ""
-        this.$store.state.password = ""
-        localStorage.username = ""
-        localStorage.password = ""
-        this.$router.push('/')
+        axios.get(this.urlLogout)
+          .then(this.$router.push('/'))
+          .then(this.logged())
+      },
+      logged() {
+        axios.get(this.urlGet)
+          .then(res => {
+            console.log(res)
+            if (res.data.isAuthenticated) {
+              this.isLoggedIn = true
+            } else {
+              console.log('false')
+              this.isLoggedIn = false
+            }
+          })
       },
       email() {
         console.log("you pressed the mail button")
       }
     },
-    computed: {
-      isLoggedIn() {
-        if (this.$store.state.username && this.$store.state.password) return true
-        return false
-      },
+    created() {
+      this.logged()
     }
   }
 </script>
 
 <style>
+.menuIndex{
+  z-index:9999;
+}
+.toolbarIndex{
+  z-index: 9998;
+}
 .box {
 	border: #000 solid 2px;
   height: auto;

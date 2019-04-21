@@ -167,6 +167,7 @@
 
 <script>
 const axios = require('axios');
+axios.defaults.withCredentials = true
 
 export default {
   name: 'App',
@@ -174,8 +175,8 @@ export default {
     return {
       urlGet: 'https://nos-server.now.sh/db/',
       // urlGet: "http://localhost:5000/db",
-      urlCommand: 'https://nos-server.now.sh/command/',
-      urlDelete: 'https://nos-server.now.sh/delete/',
+      urlCommand: 'https://nos-server.now.sh/rig/command/',
+      urlDelete: 'https://nos-server.now.sh/rig/delete/',
       i: 0,
       disableSwitch: [],
 
@@ -309,10 +310,7 @@ export default {
     },
     rigInfo() {
       this.returnToDefaults()
-      axios.post(this.urlGet, {
-          username: this.$store.state.username,
-          password: this.$store.state.password
-        })
+      axios.post(this.urlGet)
         .then(response => {
           console.log(response.data)
 
@@ -407,12 +405,14 @@ export default {
     }
   },
   created() {
-    if (!this.$store.state.username || !this.$store.state.password) {
-      this.$router.push('/')
-    } else {
-      console.log("db initialized")
-      this.rigInfo()
-    }
+    axios.post(this.urlGet)
+      .then(res => {
+        console.log(res)
+        if (res.data == "not logged in!") this.$router.push('/')
+        else {
+          this.rigInfo()
+        }
+      })
   },
   destroyed() {
     clearTimeout(this.APITimer);
