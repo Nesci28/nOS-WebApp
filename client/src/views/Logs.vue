@@ -9,13 +9,15 @@
 
 <script>
 const axios = require('axios');
-const Anser = require("anser");
+const Anser = require('anser');
 
 export default {
   name: 'App',
   data() {
     return {
       id: 0,
+      // urlGet: 'http://localhost:5000/db/',
+      urlGet: 'https://nos-server.now.sh/db/',
       logs: {
         "Nvidia": null,
         "Amd": null,
@@ -31,15 +33,12 @@ export default {
         logsArr.push(Anser.ansiToHtml(log))
       })
       return logsArr.join("<br />")
-    }
-  },
-  created() {
-    if (!this.$store.state.username || !this.$store.state.password) {
-      this.$router.push('/')
-    } else {
+    },
+    async minerLogs() {
+      let response = await axios.post(this.urlGet)
       this.id = this.$route.params.id
-      this.logs.Nvidia = this.$store.state.json.filter(ele => ele["Hostname"] == this.id)[0].Nvidia["Miner Log"]
-      this.logs.Amd = this.$store.state.json.filter(ele => ele["Hostname"] == this.id)[0].Amd["Miner Log"]
+      this.logs.Nvidia = response.data.filter(ele => ele["Hostname"] == this.id)[0].Nvidia["Miner Log"]
+      this.logs.Amd = response.data.filter(ele => ele["Hostname"] == this.id)[0].Amd["Miner Log"]
       // console.log(this.id, nvidiaLogs, amdLogs)
       if (this.logs.Nvidia) {
         this.logs.Nvidia = this.logsParser(this.logs.Nvidia)
@@ -47,7 +46,18 @@ export default {
       if (this.logs.Amd) {
         this.logs.Amd = this.logsParser(this.logs.Amd)
       }
+      this.APITimer = setTimeout(this.minerLogs, 30000)
     }
+  },
+  created() {
+    axios.post(this.urlGet)
+      .then(res => {
+        if (res.data == "not logged in!") this.$router.push('/')
+        else this.minerLogs()
+    })
+  },
+  destroyed() {
+    clearTimeout(this.APITimer);
   }
 }
 </script>

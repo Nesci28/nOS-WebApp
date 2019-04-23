@@ -60,7 +60,7 @@
 
     <v-footer fixed color="black" class="toolbarIndex pa-3">
       <pre class="white--text pr-2">Marc Gagnon</pre>
-      <pre class="white--text">(Chosn WebApp - Portfolio) &copy; 2019</pre>
+      <pre class="white--text">(nOS WebApp - Portfolio) &copy; 2019</pre>
       <v-spacer></v-spacer>
     </v-footer>
   </v-app>
@@ -76,7 +76,7 @@ axios.defaults.withCredentials = true
         drawer: false,
         isLoggedIn: false,
         // urlGet: "http://localhost:5000/action/login",
-        // urlLogout: "http://localhost:5000/action/logout"
+        // urlLogout: "http://localhost:5000/action/logout",
         urlGet: "https://nos-server.now.sh/action/login",
         urlLogout: "https://nos-server.now.sh/action/logout"
       }
@@ -89,15 +89,14 @@ axios.defaults.withCredentials = true
         axios.get(this.urlLogout)
           .then(this.$router.push('/'))
           .then(this.logged())
+          .then(window.location.reload())
       },
       logged() {
         axios.get(this.urlGet)
           .then(res => {
-            console.log(res)
             if (res.data.isAuthenticated) {
               this.isLoggedIn = true
             } else {
-              console.log('false')
               this.isLoggedIn = false
             }
           })
