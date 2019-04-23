@@ -21,8 +21,10 @@ export default {
   name: 'App',
   data() {
     return {
-      url: 'https://nos-server.now.sh/db/',
-      // url: 'http://localhost:5000/add',
+      urlGet: 'https://nos-server.now.sh/db/',
+      urlAdd: 'https://nos-server.now.sh/rig/add',
+      // urlGet: 'http://localhost:5000/db',
+      // urlPost: 'http://localhost:5000/rig/add',
       id: 0,
       json: 'null',
       res: {
@@ -59,9 +61,9 @@ export default {
 
       console.log(JSON.stringify(this.res))
       axios.post(this.url, this.res)
-      .catch(function (error) {
-          console.error(error);
-      });
+        .catch(function (error) {
+            console.error(error);
+        });
 
       this.defaults('saved')      
     }
@@ -73,12 +75,14 @@ export default {
       });
     })
 
-    if (!this.$store.state.username || !this.$store.state.username) {
-      this.$router.push('/')
-    } else {
-      this.id = this.$route.params.id;
-      this.defaults()
-    }
+    axios.post(this.urlGet)
+      .then(res => {
+        if (res.data == "not logged in!") this.$router.push('/')
+        else {
+          this.id = this.$route.params.id;
+          this.defaults()
+        }
+    })
   }
 };
 </script>

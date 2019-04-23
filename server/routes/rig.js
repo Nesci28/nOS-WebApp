@@ -61,28 +61,37 @@ router.post('/add', async (req, res) => {
 
 // Send a command to the RIG
 router.post('/command', async (req, res) => {
-  let { username, password, hostname, command } = req.body
-  password = await passwordConvert(password)
+  if (req.session.isAuthenticated) {
+    const username = req.session.username
+    const hostname = req.body.hostname
+    const command = req.body.command
 
-  let dbEntry = await rigsInfo.find({"Username": user, "Password": password, "Hostname": hostname})
-  let entryID = dbEntry[0]._id
-  dbEntry = objectWithoutKey(dbEntry[0], '_id')
-  let updatedEntry = dbEntry
-  updatedEntry["External Command"] = command
-  await rigsInfo.update(entryID, updatedEntry)
-  db.close()
-  res.send('Sent the command to the rig!')
+    let dbEntry = await rigsInfo.find({"Username": username, "Hostname": hostname})
+    let entryID = dbEntry[0]._id
+    dbEntry = objectWithoutKey(dbEntry[0], '_id')
+    let updatedEntry = dbEntry
+    updatedEntry["External Command"] = command
+    await rigsInfo.update(entryID, updatedEntry)
+    db.close()
+    res.send('Sent the command to the rig!')
+  } else {
+    res.send('not logged in!')
+  }
 });
 
 
 // Delete the RIG entry from the DB
 router.post('/delete', async (req, res) => {
-  let { username, password, hostname } = req.body
-  password = await passwordConvert(password)
+  if (req.session.isAuthenticated) {
+    const username = req.session.username
+    const hostname = req.body.hostname
+    await rigsInfo.remove({"Username": username, "Hostname": hostname})
+    db.close()
+    res.send("Rig deleted!")
+  } else {
+    res.send('not logged in!')
+  }
 
-  await rigsInfo.remove({"Username": user, "Password": password, "Hostname": hostname})
-  db.close()
-  res.send("Rig deleted!")
 });
 
 module.exports = router;

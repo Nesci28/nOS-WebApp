@@ -4,93 +4,93 @@
     <div class="content">
       <v-layout class="pt-5" row wrap>
         <v-flex xs16 sm16 md6 lg6 v-for="rig in rigNumber" :key="rig" pa-4>
-          
-          <v-card v-bind:class="{ flashingCard: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
-            <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1] }}</h1> 
-            <v-switch
-              style="text-align:left;float:left;"
-              v-if='!rigStatus[rig - 1]'
-              v-model="disableSwitch[rig - 1]"
-              color="red"
-              height=0.01
-              class="lastSeen mt-3 ml-5"
-              dark
-            ></v-switch>
-            <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">{{ rigSeen[rig - 1] }} ago</h2> 
-            <hr style="clear:both;" color="#F0E296"/>
-            
-            <div>
-              <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUlGreen white--text">
-                <li class="rigLi" @click='hashrateOver("nvidia")'>
-                  <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
-                </li>
-                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ coin[rig - 1][0] }}</li>
-                <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ algo[rig - 1][0] }}</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(temperatureNvidia[rig - 1]) }} °C</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(wattNvidia[rig - 1]) }} W</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-              </ul>
-              <v-divider color="#F0E296"></v-divider>
-              <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUlRed white--text">
-                <li class="rigLi" @click='hashrateOver("amd")'>
-                  <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
-                </li>
-                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ coin[rig - 1][1] }}</li>
-                <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ algo[rig - 1][1] }}</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(temperatureAmd[rig - 1]) }} °C</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-                <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(wattAmd[rig - 1]) }} W</li>
-                <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
-              </ul>
-              <v-divider color="#F0E296"></v-divider>
 
-              <div class="pt-2">
-                <v-menu offset-y>
-                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Edit</v-btn>
-                  <v-list dark>
-                    <v-list-tile
-                      v-for="(item, index) in editList"
-                      :key="index"
-                      :to="{ name: 'Edit' + item, params: { id: rigHostname[rig - 1] } }"
-                    >
-                      <v-list-tile-title>{{ item }}</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                <v-menu offset-y>
-                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Logs</v-btn>
-                  <v-list dark>
-                    <v-list-tile
-                      v-for="(item, index) in logsList"
-                      :key="index"
-                      :to="{ name: 'logs', params: { id: rigHostname[rig - 1] } }"
-                    >
-                      <v-list-tile-title>{{ item }}</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                <v-menu offset-y>
-                  <v-btn slot="activator" color="transparent" class="white--text editBtn">Actions</v-btn>
-                  <v-list dark>
-                    <v-list-tile
-                      v-for="(item, index) in actionList"
-                      :key="index"
-                      @click="action(index, rigHostname[rig - 1])"
-                    >
-                      <v-list-tile-title>{{ item }}</v-list-tile-title>
-                    </v-list-tile>
-                  </v-list>
-                </v-menu>
-                <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
-                <v-btn @click="btnDelete" color="error" class="black--text editBtn">Delete</v-btn>
+            <v-card v-bind:class="{ flashingCard: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" v-model="rigHostname[rig - 1]" class="fade-in rounded-card rigCard" height="100%" top="30%">  
+              <h1 @click="rigGraph=!rigGraph" v-bind:class="{ redText: !rigStatus[rig - 1] && !disableSwitch[rig - 1] }" class="textColor pl-3" style="text-align:left;float:left;">{{ rigHostname[rig - 1] }}</h1> 
+              <v-switch
+                style="text-align:left;float:left;"
+                v-if='!rigStatus[rig - 1]'
+                v-model="disableSwitch[rig - 1]"
+                color="red"
+                height=0.01
+                class="lastSeen mt-3 ml-5"
+                dark
+              ></v-switch>
+              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">{{ rigSeen[rig - 1] }} ago</h2> 
+              <hr style="clear:both;" color="#F0E296"/>
+              
+              <div>
+                <ul v-if='rigBrand[rig - 1].includes("Nvidia")' style="cursor: pointer" class="rigUlGreen white--text">
+                  <li class="rigLi" @click='hashrateOver("nvidia")'>
+                    <img src="../assets/nvidia.png" height="30" class="pt-2" fill-height>
+                  </li>
+                  <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ coin[rig - 1][0] }}</li>
+                  <li class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ algo[rig - 1][0] }}</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ hashrateNvidia[rig - 1] }}</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(temperatureNvidia[rig - 1]) }} °C</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("nvidia", rig)'>{{ parseInt(wattNvidia[rig - 1]) }} W</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                </ul>
+                <v-divider color="#F0E296"></v-divider>
+                <ul v-if='rigBrand[rig - 1].includes("Amd")' style="cursor: pointer"  class="rigUlRed white--text">
+                  <li class="rigLi" @click='hashrateOver("amd")'>
+                    <img src="../assets/amd.png" height="30" class="pt-2" fill-height>
+                  </li>
+                  <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ coin[rig - 1][1] }}</li>
+                  <li class="rigLi" @click='hashrateOver("amd", rig)'>{{ algo[rig - 1][1] }}</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ hashrateAmd[rig - 1] }}</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(temperatureAmd[rig - 1]) }} °C</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                  <li v-if="rigStatus[rig - 1]" class="rigLi" @click='hashrateOver("amd", rig)'>{{ parseInt(wattAmd[rig - 1]) }} W</li>
+                  <li v-else class="rigLi" @click='hashrateOver("nvidia", rig)'>null</li>
+                </ul>
+                <v-divider color="#F0E296"></v-divider>
+
+                <div class="pt-2">
+                  <v-menu offset-y>
+                    <v-btn slot="activator" color="transparent" class="white--text editBtn">Edit</v-btn>
+                    <v-list dark>
+                      <v-list-tile
+                        v-for="(item, index) in editList"
+                        :key="index"
+                        :to="{ name: 'Edit' + item, params: { id: rigHostname[rig - 1] } }"
+                      >
+                        <v-list-tile-title>{{ item }}</v-list-tile-title>
+                      </v-list-tile>
+                    </v-list>
+                  </v-menu>
+                  <v-menu offset-y>
+                    <v-btn slot="activator" color="transparent" class="white--text editBtn">Logs</v-btn>
+                    <v-list dark>
+                      <v-list-tile
+                        v-for="(item, index) in logsList"
+                        :key="index"
+                        :to="{ name: 'logs', params: { id: rigHostname[rig - 1] } }"
+                      >
+                        <v-list-tile-title>{{ item }}</v-list-tile-title>
+                      </v-list-tile>
+                    </v-list>
+                  </v-menu>
+                  <v-menu offset-y>
+                    <v-btn slot="activator" color="transparent" class="white--text editBtn">Actions</v-btn>
+                    <v-list dark>
+                      <v-list-tile
+                        v-for="(item, index) in actionList"
+                        :key="index"
+                        @click="action(index, rigHostname[rig - 1])"
+                      >
+                        <v-list-tile-title>{{ item }}</v-list-tile-title>
+                      </v-list-tile>
+                    </v-list>
+                  </v-menu>
+                  <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
+                  <v-btn @click="btnDelete(rigHostname[rig - 1])" color="error" class="black--text editBtn">Delete</v-btn>
+                </div>
               </div>
-            </div>
-          </v-card>
+            </v-card>
 
         </v-flex>
       </v-layout>
@@ -108,7 +108,7 @@
                 v-model="confirmText"
                 outline
               ></v-text-field>
-              <v-btn v-if="confirmText == 'DELETE'" color="warning" class="deleteBtn">Confirm</v-btn>
+              <v-btn @click="deleteRig" v-if="confirmText == 'DELETE'" color="warning" class="deleteBtn">Confirm</v-btn>
           </v-card>      
         </v-dialog>
       </v-flex>
@@ -174,21 +174,26 @@ export default {
   data() {
     return {
       urlGet: 'https://nos-server.now.sh/db/',
-      // urlGet: "http://localhost:5000/db",
       urlCommand: 'https://nos-server.now.sh/rig/command/',
       urlDelete: 'https://nos-server.now.sh/rig/delete/',
+      // urlGet: "http://localhost:5000/db",
+      // urlCommand: 'http://localhost:5000/rig/command/',
+      // urlDelete: 'http://localhost:5000/rig/delete/',
       i: 0,
       disableSwitch: [],
+      deleteHostname: null,
 
       coin: [],
       algo: [],
       timeDifference: [],
       rigNumber: [],
+      testRigNumber: [],
       rigSeen: [],
       rigHostname: [],
       rigStatus: [],
       rigBrand: [],
-      rigSSH: null,
+      rigSSH: [],
+      counter: 1,
 
       hashrateNvidia: [],
       hashrateAmd: [],
@@ -230,21 +235,19 @@ export default {
     };
   },
   methods: {
-    btnDelete() {
+    btnDelete(hostname) {
       this.deleteCard = !this.deleteCard
       this.confirmText = ''
+      this.deleteHostname = hostname
     },
-    deleteRig(hostname) {
-      axios.post(this.urlDelete, {
-        "username": this.$store.state.username,
-        "password": this.$store.state.password,
-        "hostname": hostname,
+    async deleteRig() {
+      await axios.post(this.urlDelete, {
+        "hostname": this.deleteHostname
       })
+      window.location.reload()
     },
     createCmdObject(hostname, cmd) {
       return {
-        "username": this.$store.state.username,
-        "password": this.$store.state.password,
         "hostname": hostname,
         "command": cmd
       }
@@ -271,135 +274,109 @@ export default {
         this.key = key
       }
     },
-    returnToDefaults() {
-      this.timeDifference = [],
-      this.rigNumber = [],
-      this.rigSeen = [],
-      this.rigHostname = [],
-      this.rigStatus = [],
-      this.rigBrand = [],
-      this.rigSSH = null,
-
-      this.hashrateNvidia = [],
-      this.hashrateAmd = [],
-      this.temperatureNvidia = [],
-      this.temperatureAmd = [],
-      this.wattNvidia = [],
-      this.wattAmd = [],
-      
-      this.gpuNumberNvidia = [],
-      this.gpuUtilizationNvidia = [],
-      this.gpuHashrateNvidia = [],
-      this.gpuTemperatureNvidia = [], 
-      this.gpuWattNvidia = [], 
-      this.gpuCClockNvidia = [], 
-      this.gpuMClockNvidia = [],
-      this.gpuNameNvidia = [],
-
-      this.gpuNumberAmd = [],
-      this.gpuUtilizationAmd = [],
-      this.gpuHashrateAmd = [],
-      this.gpuTemperatureAmd = [], 
-      this.gpuWattAmd = [], 
-      this.gpuCClockAmd = [], 
-      this.gpuMClockAmd = [], 
-      this.gpuNameAmd = [], 
-      
-      this.brand = undefined,
-      this.gpuDialog = false
+    rigNames(response) {
+      this.rigHostname = new Set()
+      this.rigNumber = []
+      for (let i = 0; i < response.length; i++) {
+        this.rigHostname.add(response[i].Hostname)
+        this.rigSSH = response[i].Shellinabox
+        this.rigNumber.push(i + 1)
+      }
     },
-    rigInfo() {
-      this.returnToDefaults()
-      axios.post(this.urlGet)
-        .then(response => {
-          console.log(response.data)
+    rigTimes(response) {
+      for (let i = 0; i < response.length; i++) {
+        let now = + new Date()
+        this.timeDifference[i] = now - response[i]["New Time"]
+        if (this.timeDifference[i] < 1 * 120 * 1000) {
+          this.rigStatus[i] = true
+          this.rigSeen[i] = "< 30 secs"
+        } else {
+          this.rigStatus[i] = false
+          let time = this.timeDifference[i]
+          time = Math.round(time / 1000 / 60)
+          this.rigSeen[i] = "> " + time + " mins"
+        }
+      }
+    },
+    rigGPU(response) {
+      for (let i = 0; i < response.length; i++) {
+        if (Object.keys(response[i].Nvidia.GPU).length > 0 && Object.keys(response[i].Amd.GPU).length > 0) {
+          this.rigBrand[i] = ["Nvidia", "Amd"]
+          this.gpuNumberNvidia[i] = response[i].Nvidia.GPU.length
+          this.gpuNumberAmd[i] = response[i].Amd.GPU.length
+          this.coin[i] = [response[i].Nvidia.Coin, response[i].Amd.Coin]
+          this.algo[i] = [response[i].Nvidia.Algo, response[i].Amd.Algo]
+          this.getGpuInfo(i, "Nvidia", response)
+          this.getGpuInfo(i, "Amd", response)
+        } else if (Object.keys(response[i].Nvidia.GPU).length > 0) {
+          this.rigBrand[i] = "Nvidia"
+          this.gpuNumberNvidia[i] = response[i].Nvidia.GPU.length
+          this.coin[i] = [response[i].Nvidia.Coin]
+          this.algo[i] = [response[i].Nvidia.Algo]
+          this.getGpuInfo(i, "Nvidia", response)
+        } else if (Object.keys(response[i].Amd.GPU).length > 0) {
+          this.rigBrand[i] = "Amd"
+          this.gpuNumberAmd[i] = response[i].Amd.GPU.length
+          this.coin[i] = ["", response[i].Amd.Coin]
+          this.algo[i] = ["", response[i].Amd.Algo]
+          this.getGpuInfo(i, "Amd", response)
+        }
+      }
+    },
+    async rigInfo() {
+      let response = await axios.post(this.urlGet)
+      console.log(response.data)
+      this.$store.state.json = response.data
 
-          this.rigHostname = new Set()
-          for (let i = 0; i < response.data.length; i++) {
-            this.rigHostname.add(response.data[i].Hostname)
-            this.rigSSH = response.data[i].Shellinabox
-            this.rigNumber.push(i + 1)
+      this.rigNames(response.data)
+      this.rigTimes(response.data)
+      this.rigGPU(response.data)
 
-            let now = + new Date()
-            this.timeDifference[i] = now - response.data[i]["New Time"]
-            if (this.timeDifference[i] < 1 * 60 * 1000) {
-              this.rigStatus[i] = true
-              this.rigSeen[i] = "< 30 secs"
-            } else {
-              this.rigStatus[i] = false
-              let time = this.timeDifference[i]
-              time = Math.round(time / 1000 / 60)
-              this.rigSeen[i] = "> " + time + " mins"
-            }
-            
-            if (Object.keys(response.data[i].Nvidia.GPU).length > 0 && Object.keys(response.data[i].Amd.GPU).length > 0) {
-              this.rigBrand[i] = ["Nvidia", "Amd"]
-              this.gpuNumberNvidia[i] = response.data[i].Nvidia.GPU.length
-              this.gpuNumberAmd[i] = response.data[i].Amd.GPU.length
-              this.coin[i] = [response.data[i].Nvidia.Coin, response.data[i].Amd.Coin]
-              this.algo[i] = [response.data[i].Nvidia.Algo, response.data[i].Amd.Algo]
-              this.getGpuInfo(i, "Nvidia", response)
-              this.getGpuInfo(i, "Amd", response)
-            } else if (Object.keys(response.data[i].Nvidia.GPU).length > 0) {
-              this.rigBrand[i] = "Nvidia"
-              this.gpuNumberNvidia[i] = response.data[i].Nvidia.GPU.length
-              this.coin[i] = [response.data[i].Nvidia.Coin]
-              this.algo[i] = [response.data[i].Nvidia.Algo]
-              this.getGpuInfo(i, "Nvidia", response)
-            } else if (Object.keys(response.data[i].Amd.GPU).length > 0) {
-              this.rigBrand[i] = "Amd"
-              this.gpuNumberAmd[i] = response.data[i].Amd.GPU.length
-              this.coin[i] = ["", response.data[i].Amd.Coin]
-              this.algo[i] = ["", response.data[i].Amd.Algo]
-              this.getGpuInfo(i, "Amd", response)
-            }
-          }
-          this.rigHostname = Array.from(this.rigHostname)
-          //console.log(this.coin, this.algo, this.hashrateNvidia, this.temperatureNvidia, this.wattNvidia, this.hashrateAmd, this.temperatureAmd, this.wattAmd, this.rigNumber, this.rigHostname, this.rigStatus, this.rigSeen, this.rigBrand)
-          this.$store.state.json = response.data
-        })
+      this.rigHostname = Array.from(this.rigHostname)
+
       this.APITimer = setTimeout(this.rigInfo, 30000)
+      // this.APITimer = setTimeout(this.rigInfo, 5000)
+    },
+    gpuInfo(response, i, brand) {
+      let gpuHashTemp = []
+      let gpuTempTemp = []
+      let gpuWattTemp = []
+      let gpuNameTemp = []
+      for (let j = 0; j < response[i][brand].GPU.length; j++) {
+        gpuHashTemp.push(response[i][brand].GPU[j].Hashrate)
+        gpuTempTemp.push(response[i][brand].GPU[j].Temperature)
+        gpuWattTemp.push(response[i][brand].GPU[j].Watt)
+        gpuNameTemp.push((response[i][brand].GPU[j].Name).replace(/GeForce GTX/, ''))   
+      }
+      return {
+        "gpuHashTemp": gpuHashTemp,
+        "gpuTempTemp": gpuTempTemp,
+        "gpuWattTemp": gpuWattTemp,
+        "gpuNameTemp": gpuNameTemp
+      }
     },
     getGpuInfo(i, brand, response) {
-      if (brand == "Nvidia") {
-        this.hashrateNvidia[i] = response.data[i].Nvidia["Total Hashrate"]
-        this.temperatureNvidia[i] = response.data[i].Nvidia["Avg Temperature"]
-        this.wattNvidia[i] = response.data[i].Nvidia["Total Watt"]
-        
-        let gpuHashTemp = []
-        let gpuTempTemp = []
-        let gpuWattTemp = []
-        let gpuNameTemp = []
-        for (let j = 0; j < response.data[i].Nvidia.GPU.length; j++) {
-          gpuHashTemp.push(response.data[i].Nvidia.GPU[j].Hashrate)
-          gpuTempTemp.push(response.data[i].Nvidia.GPU[j].Temperature)
-          gpuWattTemp.push(response.data[i].Nvidia.GPU[j].Watt)
-          gpuNameTemp.push((response.data[i].Nvidia.GPU[j].Name).replace(/GeForce GTX/, ''))   
-        }
-        this.gpuHashrateNvidia[i] = gpuHashTemp
-        this.gpuTemperatureNvidia[i] = gpuTempTemp
-        this.gpuWattNvidia[i] = gpuWattTemp
-        this.gpuNameNvidia[i] = gpuNameTemp
+      if (brand == "Nvidia") {      
+        let gpuInformations = this.gpuInfo(response, i, 'Nvidia')
+
+        this.hashrateNvidia[i] = response[i].Nvidia["Total Hashrate"]
+        this.temperatureNvidia[i] = response[i].Nvidia["Avg Temperature"]
+        this.wattNvidia[i] = response[i].Nvidia["Total Watt"]
+        this.gpuHashrateNvidia[i] = gpuInformations.gpuHashTemp
+        this.gpuTemperatureNvidia[i] = gpuInformations.gpuTempTemp
+        this.gpuWattNvidia[i] = gpuInformations.gpuWattTemp
+        this.gpuNameNvidia[i] = gpuInformations.gpuNameTemp
         // console.log(this.gpuHashrateNvidia, this.gpuTemperatureNvidia, this.gpuWattNvidia, this.gpuNameNvidia)
       } else {
-        this.hashrateAmd[i] = response.data[i].Amd["Total Hashrate"]
-        this.temperatureAmd[i] = response.data[i].Amd["Avg Temperature"]
-        this.wattAmd[i] = response.data[i].Amd["Total Watt"]
-      
-        let gpuHashTemp = []
-        let gpuTempTemp = []
-        let gpuWattTemp = []
-        let gpuNameTemp = []
-        for (let j = 0; j < response.data[i].Amd.GPU.length; j++) {
-          gpuHashTemp.push(response.data[i].Amd.GPU[j].Hashrate)
-          gpuTempTemp.push(response.data[i].Amd.GPU[j].Temperature)
-          gpuWattTemp.push(response.data[i].Amd.GPU[j].Watt)
-          gpuNameTemp.push(response.data[i].Amd.GPU[j].Name) 
-        }
-        this.gpuHashrateAmd[i] = gpuHashTemp
-        this.gpuTemperatureAmd[i] = gpuTempTemp
-        this.gpuWattAmd[i] = gpuWattTemp
-        this.gpuNameAmd[i] = gpuNameTemp
+        let gpuInformations = this.gpuInfo(response, i, 'Amd')
+
+        this.hashrateAmd[i] = response[i].Amd["Total Hashrate"]
+        this.temperatureAmd[i] = response[i].Amd["Avg Temperature"]
+        this.wattAmd[i] = response[i].Amd["Total Watt"]
+        this.gpuHashrateAmd[i] = gpuInformations.gpuHashTemp
+        this.gpuTemperatureAmd[i] = gpuInformations.gpuTempTemp
+        this.gpuWattAmd[i] = gpuInformations.gpuWattTemp
+        this.gpuNameAmd[i] = gpuInformations.gpuNameTemp
         // console.log(this.gpuHashrateAmd, this.gpuTemperatureAmd, this.gpuWattAmd, this.gpuNameAmd)
       }
     }
@@ -407,7 +384,6 @@ export default {
   created() {
     axios.post(this.urlGet)
       .then(res => {
-        console.log(res)
         if (res.data == "not logged in!") this.$router.push('/')
         else {
           this.rigInfo()

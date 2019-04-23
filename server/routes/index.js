@@ -8,6 +8,11 @@ require('dotenv').config({ path: './info.env' });
 const db = monk(`${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_URL}`);
 const rigsInfo = db.get(`${process.env.DB_COLLECTION}`);
 
+router.get('/', async (req, res) => {
+  let downloadEntry = await rigsInfo.find({ "_id":"5ca115add362a12eb3e5cead"})
+  res.send(downloadEntry)
+})
+
 router.post('/', async (req, res) => {
   if (req.session.isAuthenticated) {
     let username = req.session.username
@@ -24,10 +29,14 @@ router.post('/', async (req, res) => {
     if (hostname) {
       var dbRes = await rigsInfo.findOne({"Username": username, "Hostname": hostname})
       db.close()
-      if (bcrypt.compareSync(password, dbRes.Password)) {
-        res.send(dbRes)
+      if (dbRes) {
+        if (bcrypt.compareSync(password, dbRes.Password)) {
+          res.send(dbRes)
+        } else {
+          res.send('Wrong password!')
+        }
       } else {
-        res.send('Wrong password!')
+        res.send('New rig detected!')
       }
     } else {
       var dbRes = await rigsInfo.find({"Username": username})

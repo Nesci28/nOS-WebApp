@@ -2,16 +2,16 @@
   <v-app>
     <div class="background"></div>
     <div class="text pa-5">
-      <span class="white--text" v-on:click="changelogLink">changelog : 
-          <span style="cursor: pointer" class="linkText blue--text">{{ changelog  }}</span>
+      <h3 class="white--text" v-on:click="changelogLink">changelog : 
+          <h3 style="cursor: pointer" class="linkText blue--text">{{ changelog  }}</h3>
           <br /> 
-      </span>
-      <span v-if="version" class="white--text">version : {{ version }} <br /></span>
-      <span v-if="link" class="white--text" v-on:click="gdrive">link : 
-        <span style="cursor: pointer" class="linkText blue--text">{{ link }}</span>
+      </h3>
+      <h3 v-if="version" class="white--text">version : {{ version }} <br /></h3>
+      <h3 v-if="link" class="white--text" v-on:click="gdrive">link : 
+        <h3 style="cursor: pointer" class="linkText blue--text">{{ link }}</h3>
         <br />
-      </span>
-      <span v-if="md5" class="white--text">md5 : {{ md5 }} <br /></span>
+      </h3>
+      <h3 v-if="md5" class="white--text">md5 : {{ md5 }} <br /></h3>
     </div>
   </v-app>
 </template>
@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       urlGet: 'https://nos-server.now.sh/db',
+      // urlGet: 'http://localhost:5000/db',
       changelog: "https://github.com/Nesci28/nOS/blob/master/Changelog.md",
       API: null,
       version: null,
@@ -40,7 +41,7 @@ export default {
     }
   },
   async created() {
-    this.API = await axios.post(this.urlGet, {})
+    this.API = await axios.get(this.urlGet)
     this.API = this.API.data[0]
     this.link = this.API.download
     this.md5 = this.API.md5

@@ -1,3 +1,24 @@
+[22-04-2019]
+__Back-End__
+- Doesnt save the session on anonymous connection
+- Delete the session from the store and the cookie completely on logout
+
+__Front-End__
+- Login correctly redirect to a new page
+- Changed the UI of the login page
+- Create a session cookie
+
+[21-04-2019]  
+__Back-End__
+- Added a DB for the different sessions
+- Secured all the endpoints for the new Authentication system
+- New endpoint to get the entry from the DB with the latest download link and md5
+
+__Front-End__
+- Fixed a couple of bugs with the Authentication system
+- Refactorized the way the data is getting extracted from the back-end response
+- V-Cards arent disappearing anymore on data refresh
+
 [20-04-2019]  
 __ Back-End __
 - Finished the implementation of the Auth system
