@@ -1,4 +1,4 @@
-module.exports = async () => {
+module.exports = async (offlineRigs) => {
   const monk = require('monk');
   const sgMail = require('../node_modules/@sendgrid/mail');
   require('dotenv').config({ path: '../info.env' });
@@ -11,11 +11,19 @@ module.exports = async () => {
   let dbEntries = await rigsInfo.find({})
   db.close()
   let now = new Date().getTime()
+  console.log(offlineRigs)
   dbEntries.forEach(entry => {
     if (entry["New Time"]) {
-      if (entry["New Time"] <= (now - 180000) && entry["New Time"] >= (now - 240000)) {
-        console.log(`${entry.Hostname} is not running`)
-        sendEmail(getAddress(entry.Username), entry.Hostname)
+      if (entry["New Time"] <= (now - 300000)) {
+        if (!offlineRigs.has(`${entry.Username}, ${entry.Hostname}`)) {
+          offlineRigs.add(`${entry.Username}, ${entry.Hostname}`)
+          console.log(`${entry.Hostname} is not running`)
+          sendEmail(getAddress(entry.Username), entry.Hostname)
+        }
+      } else {
+        if (offlineRigs.has(`${entry.Username}, ${entry.Hostname}`)) {
+          offlineRigs.delete(`${entry.Username}, ${entry.Hostname}`)          
+        }
       }
     }
   })
