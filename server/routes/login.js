@@ -14,7 +14,8 @@ const sessions = db.get(`${process.env.DB_SESSION}`)
 router.post('/login', async (req, res) => {
   if (req.session.isAuthenticated) res.send(req.session)
   else {
-    const { username, password } = req.body
+    let { username, password } = req.body
+    username = username.toLowerCase()
     let user = await rigsInfo.findOne({ "Username": username })
     if (!user) res.send('User not found')
     else {
@@ -23,12 +24,13 @@ router.post('/login', async (req, res) => {
         else {
           req.session.username = username
           req.session.isAuthenticated = true
-          session.save()
+          req.session.rigsState = []
           res.send('logged in!')
         }
       } else {
         req.session.username = username
         req.session.isAuthenticated = true
+        req.session.rigsState = []
         res.send(req.session)
       }
     }
@@ -36,13 +38,15 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/login', async (req, res) => {
-  if (req.session.isAuthenticated) res.send(req.session)
+  if (req.session.isAuthenticated) {
+    res.send(req.session)
+  }
   else res.send('not logged in!')
 });
 
-router.get('/logout', async (req, res) => {
+router.post('/logout', async (req, res) => {
   if (req.session.isAuthenticated) {
-    const username = req.session.username
+    const username = req.session.username.toLowerCase()
     await sessions.remove({ 'session.username': username })
   }
   req.session.destroy();

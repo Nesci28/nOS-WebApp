@@ -7,6 +7,8 @@ import EditOverclocks from './views/EditOverclocks.vue';
 import Rigs from './views/Rigs.vue';
 import Logs from './views/Logs.vue';
 import Download from './views/Download.vue';
+import AboutnOS from './views/AboutnOS.vue';
+import AboutMe from './views/AboutMe.vue';
 
 Vue.use(Router);
 
@@ -46,6 +48,16 @@ export default new Router({
       path: '/download',
       name: 'download',
       component: Download,
+    },
+    {
+      path: '/aboutnOS',
+      name: 'aboutnOS',
+      component: AboutnOS,
+    },
+    {
+      path: '/aboutMe',
+      name: 'aboutMe',
+      component: AboutMe,
     }
   ],
 });

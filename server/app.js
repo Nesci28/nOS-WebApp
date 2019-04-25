@@ -4,10 +4,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const cron = require('node-cron');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const morgan = require('morgan');
 
 require('dotenv').config({ path: './info.env' });
 
 const app = express();
+
+// Logger
+app.use(morgan('tiny'))
 
 // Session store
 const store = new MongoDBStore({
@@ -22,7 +26,7 @@ store.on('error', function(error) {
 
 // Cors
 app.use(cors({
-  origin: ["https://node-os.now.sh", "http://localhost:8080"],
+  origin: ["https://node-os.now.sh", "http://localhost:8080", "http://192.168.0.127:8080"],
   methods: ['GET','POST'],
   credentials: true
 }))
@@ -37,14 +41,16 @@ app.use(
     secret: `${process.env.COOKIE_SECRET}`,
     store: store,
     cookie: { 
-      maxAge: 600000,
-      httpOnly: true 
+      maxAge: 1 * 60 * 60 * 24 * 30 * 1000,
+      httpOnly: false,
+      secure: false
     },
     resave: true,
     unset: 'destroy',
     saveUninitialized: false
   })
 );
+
 
 // Routes
 app.use('/db', require('./routes/index.js'));

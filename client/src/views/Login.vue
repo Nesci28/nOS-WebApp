@@ -5,7 +5,7 @@
         <h1>Login</h1>
 
         <div class="textbox">
-          <v-icon color="white">account_circle</v-icon>
+          <v-icon color="white">account_box</v-icon>
           <input type="text" placeholder="Email address" v-model="user.login">
         </div>
 
@@ -14,7 +14,7 @@
           <input type="password" placeholder="Password" v-model="user.password">
         </div>
 
-        <v-btn flat @click="checkLogin" type="submit" color="#F0E296" class="btn">Login</v-btn>
+        <v-btn flat @click="checkLogin" color="#F0E296" class="btn">Sign in</v-btn>
         <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> Use the login information from SystemConfig.json</h3>
       </v-form>
   </v-app>
@@ -28,8 +28,7 @@ export default {
   name: 'App',
   data() {
     return {
-      urlGet: 'https://nos-server.now.sh/action/login',
-      // urlGet: "http://localhost:5000/action/login",
+      urlGet: '',
       loggedIn: false,
       user: {
         login: "",
@@ -38,21 +37,37 @@ export default {
     }
   },
   methods: {
-    checkLogin() {
-      let dbEntry = axios.post(this.urlGet, {
-          username: this.user.login,
-          password: this.user.password
-        })        
-        .then(res => {
-          console.log(res)
-          if (res.data != "not logged in!") {
+    async checkLogin() {
+      let res = await axios.get(this.urlGet)
+      if (res.data == 'not logged in!') {
+        if (this.user.login && this.user.password) {
+          let dbEntry = await axios.post(this.urlGet, {
+            username: this.user.login,
+            password: this.user.password
+          })
+          if (dbEntry.data.isAuthenticated) {
             this.$router.push('/rigs')
             window.location.reload()
           }
-        })
+        }
+      }
     }
   },
-  created: function () {
+  mounted() {
+    window.addEventListener('keyup', event => {
+      if (event.keyCode === 13) { 
+        this.checkLogin()
+      }
+    })
+  },
+  created() {
+    if (window.location.href.includes('localhost')) {
+      this.urlGet = "http://localhost:5000/action/login"
+    } else if (window.location.href.includes('192.168')) {
+      this.urlGet = "https://192.168.0.127:3000/action/login"
+    } else {
+      this.urlGet = 'https://nos-server.now.sh/action/login'
+    }
     axios.get(this.urlGet)
       .then(res => {
         if (res.data.isAuthenticated) this.$router.push('/rigs')
