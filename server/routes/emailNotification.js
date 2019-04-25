@@ -13,7 +13,7 @@ module.exports = async () => {
   let now = new Date().getTime()
   dbEntries.forEach(entry => {
     if (entry["New Time"]) {
-      if (entry["New Time"] <= (now - 120000) && entry["New Time"] >= (now - 180000)) {
+      if (entry["New Time"] <= (now - 180000) && entry["New Time"] >= (now - 240000)) {
         console.log(`${entry.Hostname} is not running`)
         sendEmail(getAddress(entry.Username), entry.Hostname)
       }

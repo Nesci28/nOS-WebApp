@@ -22,34 +22,36 @@ const objectWithoutKey = (object, key) => {
 
 // Add or Update the RIG entry
 router.post('/add', async (req, res) => {
+  console.log(req.body.json)
   if (req.body.info) {
-    var username = req.body.info.Username
-    var password = req.body.info.Password
+    var username = req.body.info.Username.toLowerCase()
     var hostname = req.body.info.Hostname
     var section = req.body.section
+    console.log(username, hostname, section)
   } else {
-    var username = req.body.Username
+    var username = req.body.Username.toLowerCase()
     var password = req.body.Password
     var hostname = req.body.Hostname
   }
   let dbEntry = await rigsInfo.find({"Username": username, "Hostname": hostname})
   if (dbEntry.length > 0) {
-    if (bcrypt.compareSync(password, dbEntry[0].Password)) {
-      let entryID = dbEntry[0]._id
-      if (section) {
-        dbEntry = objectWithoutKey(dbEntry[0], '_id')
-        var updatedEntry = dbEntry
-        updatedEntry[section] = req.body.json
-      } else {
+    let entryID = dbEntry[0]._id
+    if (section && req.session.isAuthenticated) {
+      dbEntry = objectWithoutKey(dbEntry[0], '_id')
+      var updatedEntry = dbEntry
+      updatedEntry[section] = req.body.json
+    } else {
+      if (bcrypt.compareSync(password, dbEntry[0].Password)) {
         var updatedEntry = req.body
-        updatedEntry._id = entryID
+          updatedEntry._id = entryID
+        }
+        updatedEntry.Password = await passwordConvert(password)
       }
-      updatedEntry.Password = await passwordConvert(password)
+      console.log(entryID, updatedEntry)
       await rigsInfo.update(entryID, updatedEntry)
       db.close()
       res.send('Updated DB!')
       // res.send(await rigsInfo.find({"Username": username, "Password": password, "Hostname": hostname}))
-    }
   } else {
     req.body.Password = await passwordConvert(password)
     await rigsInfo.insert(req.body)
@@ -62,7 +64,7 @@ router.post('/add', async (req, res) => {
 // Send a command to the RIG
 router.post('/command', async (req, res) => {
   if (req.session.isAuthenticated) {
-    const username = req.session.username
+    const username = req.session.username.toLowerCase()
     const hostname = req.body.hostname
     const command = req.body.command
 
@@ -83,7 +85,7 @@ router.post('/command', async (req, res) => {
 // Delete the RIG entry from the DB
 router.post('/delete', async (req, res) => {
   if (req.session.isAuthenticated) {
-    const username = req.session.username
+    const username = req.session.username.toLowerCase()
     const hostname = req.body.hostname
     await rigsInfo.remove({"Username": username, "Hostname": hostname})
     db.close()

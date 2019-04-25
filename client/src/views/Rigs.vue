@@ -11,6 +11,7 @@
                 style="text-align:left;float:left;"
                 v-if='!rigStatus[rig - 1]'
                 v-model="disableSwitch[rig - 1]"
+                @change="updateSession"
                 color="red"
                 height=0.01
                 class="lastSeen mt-3 ml-5"
@@ -80,7 +81,7 @@
                       <v-list-tile
                         v-for="(item, index) in actionList"
                         :key="index"
-                        @click="action(index, rigHostname[rig - 1])"
+                        @click="action(index, rigHostname[rig - 1], rig - 1)"
                       >
                         <v-list-tile-title>{{ item }}</v-list-tile-title>
                       </v-list-tile>
@@ -91,8 +92,15 @@
                 </div>
               </div>
             </v-card>
-
         </v-flex>
+        <v-progress-circular
+        :size="140"
+        :width="14"
+        v-if="loading"
+        indeterminate
+        color="rgb(240, 226, 150)"
+        class="middle"
+      ></v-progress-circular>
       </v-layout>
       
       <v-flex xs16 sm16 md6 lg6>
@@ -173,15 +181,15 @@ export default {
   name: 'App',
   data() {
     return {
-      urlGet: 'https://nos-server.now.sh/db/',
-      urlCommand: 'https://nos-server.now.sh/rig/command/',
-      urlDelete: 'https://nos-server.now.sh/rig/delete/',
-      // urlGet: "http://localhost:5000/db",
-      // urlCommand: 'http://localhost:5000/rig/command/',
-      // urlDelete: 'http://localhost:5000/rig/delete/',
+      urlLogin: '',
+      urlGet: '',
+      urlCommand: '',
+      urlDelete: '',
+      urlUpdateSession: '',
       i: 0,
       disableSwitch: [],
       deleteHostname: null,
+      loading: true,
 
       coin: [],
       algo: [],
@@ -235,6 +243,13 @@ export default {
     };
   },
   methods: {
+    async updateSession() {
+      this.rigHostname = []
+      this.$store.state.json.forEach(data => {
+        this.rigHostname.push(data.Hostname)
+      })
+      let res = await axios.post(this.urlUpdateSession, this.disableSwitch)
+    },
     btnDelete(hostname) {
       this.deleteCard = !this.deleteCard
       this.confirmText = ''
@@ -252,9 +267,9 @@ export default {
         "command": cmd
       }
     },
-    action(index, hostname) {
+    action(index, hostname, i) {
       if (index == 0) {
-        let win = window.open(this.rigSSH, '_noblank')
+        let win = window.open(this.rigSSH[i], '_noblank')
         win.focus()
       } else if (index == 1) {
         axios.post(this.urlCommand, this.createCmdObject(hostname, 'start'))
@@ -277,9 +292,10 @@ export default {
     rigNames(response) {
       this.rigHostname = new Set()
       this.rigNumber = []
+      this.rigSSH = []
       for (let i = 0; i < response.length; i++) {
         this.rigHostname.add(response[i].Hostname)
-        this.rigSSH = response[i].Shellinabox
+        this.rigSSH.push(response[i].Shellinabox)
         this.rigNumber.push(i + 1)
       }
     },
@@ -324,7 +340,9 @@ export default {
       }
     },
     async rigInfo() {
+      this.loading = true
       let response = await axios.post(this.urlGet)
+      this.loading = false
       console.log(response.data)
       this.$store.state.json = response.data
 
@@ -382,11 +400,34 @@ export default {
     }
   },
   created() {
+    if (window.location.href.includes('localhost')) {
+      this.urlLogin = "http://localhost:5000/action/login"
+      this.urlGet = "http://localhost:5000/db"
+      this.urlCommand = 'http://localhost:5000/rig/command/'
+      this.urlDelete = 'http://localhost:5000/rig/delete/'
+      this.urlUpdateSession = 'http://localhost:5000/db/updateSession/'
+    } else if (window.location.href.includes('192.168')) {
+      this.urlLogin = "http://192.168.0.127:5000/action/login"
+      this.urlGet = "http://192.168.0.127:5000/db"
+      this.urlCommand = 'http://192.168.0.127:5000/rig/command/'
+      this.urlDelete = 'http://192.168.0.127:5000/rig/delete/'
+      this.urlUpdateSession = 'http://192.168.0.127:5000/db/updateSession/'
+    } else {
+      this.urlLogin = "https://nos-server.now.sh/action/login"
+      this.urlGet = 'https://nos-server.now.sh/db/'
+      this.urlCommand = 'https://nos-server.now.sh/rig/command/'
+      this.urlDelete = 'https://nos-server.now.sh/rig/delete/'
+      this.urlUpdateSession = 'https://nos-server.now.sh/db/updateSession/'
+    }
     axios.post(this.urlGet)
       .then(res => {
         if (res.data == "not logged in!") this.$router.push('/')
         else {
-          this.rigInfo()
+          axios.get(this.urlLogin)
+            .then(res => {
+              this.disableSwitch = res.data.rigsState
+              this.rigInfo()
+            })
         }
       })
   },
@@ -398,6 +439,14 @@ export default {
 </script>
 
 <style scoped>
+.infoCard {
+  margin-left: auto;
+  margin-right: auto;
+}
+.rounded-card {
+  background-color: rgb(46, 46, 46);
+  border-radius:30px;
+}
 .deleteBtn{
   margin-left: 4%;
 }
@@ -413,14 +462,6 @@ export default {
 .editBtn{
   top: -5px;
   left: 10px
-}
-.infoCard {
-  margin-left: auto;
-  margin-right: auto;
-}
-.rounded-card {
-  background-color: rgb(46, 46, 46);
-  border-radius:30px;
 }
 .rigCard{
   border: 5px solid rgb(240, 226, 150);
