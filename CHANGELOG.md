@@ -1,4 +1,7 @@
 [24-04-2019]  
+__Back-End__
+- Changed the Email notification cronjob mechanics to make sure to not receive false positive
+
 __Front-End__ 
 - Fixed the sidebar on small screen
 - Fixed the logo image (on small screen)

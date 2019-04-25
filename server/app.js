@@ -58,8 +58,9 @@ app.use('/rig', require('./routes/rig.js'));
 app.use('/action', require('./routes/login.js'));
 
 // Cronjob
-cron.schedule('* */1 * * * ', async () => {
-  await require('./routes/emailNotification.js')()
+const offlineRigs = new Set([])
+cron.schedule('* */1 * * *', async () => {
+  await require('./routes/emailNotification.js')(offlineRigs)
   console.log('cronjob done!')
 });
 
