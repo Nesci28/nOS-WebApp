@@ -1,3 +1,21 @@
+[24-04-2019]  
+__Front-End__ 
+- Fixed the sidebar on small screen
+- Fixed the logo image (on small screen)
+- (Fix the rigs not showing on cell phone) ???
+- Changed the API endpoints automatically depending on the local IP (to test in cellphones, etc)
+- Username should be case insensitive on the login page
+- Fixed the weird error that was causing the rig Hostname to become [Object Event] on the switch activation
+- Fixed the Configurations editor
+- Fixed the SSH link in the "Actions" menu
+
+[23-04-2019]  
+__Front-End__
+- Changed the API endpoints automatically depending on the environment (dev or prod)
+- Added the About nOS and about Me pages
+- Added a loading spinner on the pages the require an API response before showing up
+- Added the logo
+
 [22-04-2019]
 __Back-End__
 - Doesnt save the session on anonymous connection
@@ -6,7 +24,8 @@ __Back-End__
 __Front-End__
 - Login correctly redirect to a new page
 - Changed the UI of the login page
-- Create a session cookie
+- Created a session cookie
+- Fixed a lot of bugs
 
 [21-04-2019]  
 __Back-End__

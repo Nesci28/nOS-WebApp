@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   if (req.session.isAuthenticated) {
-    let username = req.session.username
+    let username = req.session.username.toLowerCase()
     let hostname = req.body.hostname
     if (hostname) {
       var dbRes = await rigsInfo.find({"Username": username, "Hostname": hostname})
@@ -26,6 +26,7 @@ router.post('/', async (req, res) => {
     res.send(dbRes)
   } else {
     let { username, password, hostname } = req.body
+    username = username.toLowerCase()
     if (hostname) {
       var dbRes = await rigsInfo.findOne({"Username": username, "Hostname": hostname})
       db.close()
@@ -52,7 +53,14 @@ router.post('/', async (req, res) => {
         else res.send('Wrong password!')
       }
     }
+  } 
+});
+
+router.post('/updateSession', async (req, res) => {
+  if (req.session.isAuthenticated) {
+    req.session.rigsState = req.body
   }
+  res.send(req.session)
 });
 
 module.exports = router;
