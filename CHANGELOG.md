@@ -1,3 +1,7 @@
+[25-04-2019]  
+__Back-End__
+- Changed the mechanics of the Email notification cronjob (again)
+
 [24-04-2019]  
 __Back-End__
 - Changed the Email notification cronjob mechanics to make sure to not receive false positive

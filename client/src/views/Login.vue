@@ -33,14 +33,15 @@ export default {
       user: {
         login: "",
         password: "",
-      }
+      },
+      resData: ''
     }
   },
   methods: {
     async checkLogin() {
       let res = await axios.get(this.urlGet)
+      this.resData = res.data
       if (res.data == 'not logged in!') {
-        if (this.user.login && this.user.password) {
           let dbEntry = await axios.post(this.urlGet, {
             username: this.user.login,
             password: this.user.password
@@ -49,7 +50,7 @@ export default {
             this.$router.push('/rigs')
             window.location.reload()
           }
-        }
+        
       }
     }
   },
@@ -64,9 +65,9 @@ export default {
     if (window.location.href.includes('localhost')) {
       this.urlGet = "http://localhost:5000/action/login"
     } else if (window.location.href.includes('192.168')) {
-      this.urlGet = "https://192.168.0.127:3000/action/login"
+      this.urlGet = "http://192.168.0.127:5000/action/login/"
     } else {
-      this.urlGet = 'https://nos-server.now.sh/action/login'
+      this.urlGet = 'https://nos-server.now.sh/action/login/'
     }
     axios.get(this.urlGet)
       .then(res => {
