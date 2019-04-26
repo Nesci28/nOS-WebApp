@@ -11,34 +11,32 @@ module.exports = async (offlineRigs) => {
   let dbEntries = await rigsInfo.find({})
   db.close()
   let now = new Date().getTime()
-  console.log(offlineRigs)
   dbEntries.forEach(entry => {
     if (entry["New Time"]) {
       if (entry["New Time"] <= (now - 300000)) {
-        if (!offlineRigs.has(`${entry.Username}, ${entry.Hostname}`)) {
-          offlineRigs.add(`${entry.Username}, ${entry.Hostname}`)
-          console.log(`${entry.Hostname} is not running`)
-          sendEmail(getAddress(entry.Username), entry.Hostname)
-        }
-      } else {
-        if (offlineRigs.has(`${entry.Username}, ${entry.Hostname}`)) {
-          offlineRigs.delete(`${entry.Username}, ${entry.Hostname}`)          
-        }
+        offlineRigs[`${entry.Username}-${entry.Hostname}`] = (offlineRigs[`${entry.Username}-${entry.Hostname}`]+1) || 1;
+      }
+      if (offlineRigs[`${entry.Username}-${entry.Hostname}`] == 6) {
+        console.log(`${entry.Hostname} is not running`)
+        sendEmail(getAddress(entry.Username), entry.Hostname, entry["New Time"], now)
       }
     }
   })
-  
   function getAddress(email) {
     if (email == 'markgagnon') return "markgagnon28@gmail.com"
     else return email
   }
   
-  async function sendEmail(email, hostname) {
+  async function sendEmail(email, hostname, lastSeenTime, now) {
     const msg = {
       to: email,
       from: 'nos-notification@nos.com',
       subject: `${hostname} is down!`,
-      text: `${hostname} is down!`,
+      text: `
+      ${hostname} is down!
+      Last time seen: ${lastSeenTime}
+      Time right now: ${now}
+      `,
     };
     sgMail.send(msg);
     console.log("email sent!")

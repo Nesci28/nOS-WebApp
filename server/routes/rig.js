@@ -22,12 +22,10 @@ const objectWithoutKey = (object, key) => {
 
 // Add or Update the RIG entry
 router.post('/add', async (req, res) => {
-  console.log(req.body.json)
   if (req.body.info) {
     var username = req.body.info.Username.toLowerCase()
     var hostname = req.body.info.Hostname
     var section = req.body.section
-    console.log(username, hostname, section)
   } else {
     var username = req.body.Username.toLowerCase()
     var password = req.body.Password
@@ -47,7 +45,6 @@ router.post('/add', async (req, res) => {
         }
         updatedEntry.Password = await passwordConvert(password)
       }
-      console.log(entryID, updatedEntry)
       await rigsInfo.update(entryID, updatedEntry)
       db.close()
       res.send('Updated DB!')

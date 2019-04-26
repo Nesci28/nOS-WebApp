@@ -12,6 +12,7 @@ const sessions = db.get(`${process.env.DB_SESSION}`)
 
 // Routes
 router.post('/login', async (req, res) => {
+  console.log(req.body)
   if (req.session.isAuthenticated) res.send(req.session)
   else {
     let { username, password } = req.body
@@ -31,6 +32,7 @@ router.post('/login', async (req, res) => {
         req.session.username = username
         req.session.isAuthenticated = true
         req.session.rigsState = []
+        console.log(req.session)
         res.send(req.session)
       }
     }
@@ -38,6 +40,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/login', async (req, res) => {
+  console.log(req.session)
   if (req.session.isAuthenticated) {
     res.send(req.session)
   }
