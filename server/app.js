@@ -24,6 +24,9 @@ store.on('error', function(error) {
   console.log(error);
 });
 
+// Proxy
+app.enable('trust proxy');
+
 // Cors
 app.use(cors({
   origin: ["https://node-os.now.sh", "http://localhost:8080", "http://192.168.0.127:8080"],
@@ -43,7 +46,7 @@ app.use(
     cookie: { 
       maxAge: 1 * 60 * 60 * 24 * 30 * 1000,
       httpOnly: false,
-      secure: false
+      secure: true
     },
     resave: true,
     unset: 'destroy',
@@ -58,7 +61,7 @@ app.use('/rig', require('./routes/rig.js'));
 app.use('/action', require('./routes/login.js'));
 
 // Cronjob
-const offlineRigs = new Set([])
+const offlineRigs = {}
 cron.schedule('* */1 * * *', async () => {
   await require('./routes/emailNotification.js')(offlineRigs)
   console.log('cronjob done!')
