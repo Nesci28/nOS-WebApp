@@ -16,6 +16,7 @@
 
         <v-btn flat @click="checkLogin" color="#F0E296" class="btn">Sign in</v-btn>
         <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> Use the login information from SystemConfig.json</h3>
+        <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> For a demo, use <span <span class="logoColor">markgagnon // root</span> as the account information.</h3>
       </v-form>
   </v-app>
 </template>
@@ -23,6 +24,9 @@
 <script>
 const axios = require('axios');
 axios.defaults.withCredentials = true
+axios.defaults.headers = {
+  'Content-Type': 'application/json'
+}
 
 export default {
   name: 'App',
@@ -61,7 +65,7 @@ export default {
       }
     })
   },
-  created() {
+  async created() {
     if (window.location.href.includes('localhost')) {
       this.urlGet = "http://localhost:5000/action/login"
     } else if (window.location.href.includes('192.168')) {
@@ -69,10 +73,22 @@ export default {
     } else {
       this.urlGet = 'https://nos-server.now.sh/action/login/'
     }
-    axios.get(this.urlGet)
-      .then(res => {
-        if (res.data.isAuthenticated) this.$router.push('/rigs')
-      })
+    // fetch(this.urlGet)
+    //     .then(function(response) {
+    //       if (!response.ok) {
+    //         throw Error(response.statusText);
+    //       }
+    //       return response.json();
+    //     }).then(function(response) {
+    //         console.log(response);
+    //     }).catch(function(error) {
+    //         console.log(error);
+    //     });
+
+
+    let res = await axios.get(this.urlGet)
+    console.log(res)
+    if (res.data.isAuthenticated) this.$router.push('/rigs')
   }
 };
 </script>

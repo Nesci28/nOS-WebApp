@@ -111,8 +111,11 @@
 </template>
 
 <script> 
-const axios = require('axios');
-axios.defaults.withCredentials = true
+  const axios = require('axios');
+  axios.defaults.withCredentials = true
+  axios.defaults.headers = {
+    'Content-Type': 'application/json'
+  }
 
   export default {
     data() {
@@ -174,6 +177,14 @@ axios.defaults.withCredentials = true
 </script>
 
 <style>
+.logoColor{
+  color: rgb(240, 226, 150);
+}
+.disable-events {
+  background-color: black;
+  opacity: 0.25;
+  pointer-events: none
+}
 .middle{
   display: block;
   margin-left: auto;

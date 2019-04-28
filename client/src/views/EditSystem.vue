@@ -16,7 +16,7 @@
         @mounted="onMounted"
         >
       </Monaco>
-      <v-btn color="success" @click="deleteCard = !deleteCard">Save</v-btn>
+      <v-btn :class="{'disable-events': fakeAccount}" color="success" @click="deleteCard = !deleteCard">Save</v-btn>
       <v-btn color="warning" to="/Rigs">Cancel</v-btn>
 
       <v-flex xs16 sm16 md6 lg6>
@@ -61,7 +61,8 @@ export default {
       loading: true,
       deleteCard: false,
       confirmText: '',
-      deleteRig: ''
+      deleteRig: '',
+      fakeAccount: true
     }
   },
   components: {
@@ -101,12 +102,15 @@ export default {
   },
   mounted() {
     if (window.location.href.includes('localhost')) {
+      this.urlLogin = "http://localhost:5000/action/login"
       this.urlGet = "http://localhost:5000/db"
       this.urlAdd = "http://localhost:5000/rig/add"
     } else if (window.location.href.includes('192.168')) {
+      this.urlLogin = "http://192.168.0.127:5000/action/login"
       this.urlGet = "http://192.168.0.127:5000/db"
       this.urlAdd = "http://192.168.0.127:5000/rig/add"
     } else {
+      this.urlLogin = "https://nos-server.now.sh/action/login"
       this.urlGet = "https://nos-server.now.sh/db"
       this.urlAdd = "https://nos-server.now.sh/rig/add"
     }
@@ -118,12 +122,14 @@ export default {
     })
 
     this.loading = true
-    axios.post(this.urlGet)
+    axios.get(this.urlLogin)
       .then(res => {
+        console.log(res.data)
         this.loading = false
         if (res.data == "not logged in!") this.$router.push('/')
         else {
           this.id = this.$route.params.id;
+          this.fakeAccount = res.data.fakeAccount
           this.defaults()
         }
     })
