@@ -16,7 +16,7 @@
 
         <v-btn flat @click="checkLogin" color="#F0E296" class="btn">Sign in</v-btn>
         <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> Use the login information from SystemConfig.json</h3>
-        <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> For a demo, use <span <span class="logoColor">markgagnon // root</span> as the account information.</h3>
+        <h3 class="white--text pt-2"><v-icon color="#F0E296" medium>info</v-icon> For a demo, use <span class="logoColor">markgagnon // root</span> as the account information.</h3>
       </v-form>
   </v-app>
 </template>
