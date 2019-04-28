@@ -25,12 +25,14 @@ router.post('/login', async (req, res) => {
         else {
           req.session.username = username
           req.session.isAuthenticated = true
+          req.session.fakeAccount = false
           req.session.rigsState = []
           res.send('logged in!')
         }
       } else {
         req.session.username = username
         req.session.isAuthenticated = true
+        req.session.fakeAccount = true
         req.session.rigsState = []
         console.log(req.session)
         res.send(req.session)
@@ -44,7 +46,7 @@ router.get('/login', async (req, res) => {
   if (req.session.isAuthenticated) {
     res.send(req.session)
   }
-  else res.send('not logged in!')
+  else res.json('not logged in!')
 });
 
 router.post('/logout', async (req, res) => {

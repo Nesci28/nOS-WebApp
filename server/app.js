@@ -46,7 +46,7 @@ app.use(
     cookie: { 
       maxAge: 1 * 60 * 60 * 24 * 30 * 1000,
       httpOnly: false,
-      secure: true
+      secure: false
     },
     resave: true,
     unset: 'destroy',

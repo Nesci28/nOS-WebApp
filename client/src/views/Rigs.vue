@@ -17,7 +17,8 @@
                 class="lastSeen mt-3 ml-5"
                 dark
               ></v-switch>
-              <h2 v-if='!rigStatus[rig - 1]' class="white--text pt-1 pr-3" style="text-align:right;float:right;">{{ rigSeen[rig - 1] }} ago</h2> 
+              <h2 v-if='!rigStatus[rig - 1]' class="red--text pt-1 pr-3" style="text-align:right;float:right;">{{ rigSeen[rig - 1] }}</h2>
+              <h2 v-else class="blue--text pt-1 pr-3" style="text-align:right;float:right;">{{ runningTime[rig - 1] }}</h2>
               <hr style="clear:both;" color="#F0E296"/>
               
               <div>
@@ -82,13 +83,14 @@
                         v-for="(item, index) in actionList"
                         :key="index"
                         @click="action(index, rigHostname[rig - 1], rig - 1)"
+                        :disabled="fakeAccount"
                       >
                         <v-list-tile-title>{{ item }}</v-list-tile-title>
                       </v-list-tile>
                     </v-list>
                   </v-menu>
                   <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
-                  <v-btn @click="btnDelete(rigHostname[rig - 1])" color="error" class="black--text editBtn">Delete</v-btn>
+                  <v-btn :class="{'disable-events': fakeAccount}" @click="btnDelete(rigHostname[rig - 1])" color="error" class="black--text editBtn">Delete</v-btn>
                 </div>
               </div>
             </v-card>
@@ -176,6 +178,9 @@
 <script>
 const axios = require('axios');
 axios.defaults.withCredentials = true
+axios.defaults.headers = {
+  'Content-Type': 'application/json'
+}
 
 export default {
   name: 'App',
@@ -190,10 +195,12 @@ export default {
       disableSwitch: [],
       deleteHostname: null,
       loading: true,
+      fakeAccount: true,
 
       coin: [],
       algo: [],
       timeDifference: [],
+      runningTime: [],
       rigNumber: [],
       testRigNumber: [],
       rigSeen: [],
@@ -268,15 +275,17 @@ export default {
       }
     },
     action(index, hostname, i) {
-      if (index == 0) {
-        let win = window.open(this.rigSSH[i], '_noblank')
-        win.focus()
-      } else if (index == 1) {
-        axios.post(this.urlCommand, this.createCmdObject(hostname, 'start'))
-      } else if (index == 2) {
-        axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown -r now'))
-      } else if (index == 2) {
-        axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown now'))
+      if (!this.fakeAccount) {
+        if (index == 0) {
+          let win = window.open(this.rigSSH[i], '_noblank')
+          win.focus()
+        } else if (index == 1) {
+          axios.post(this.urlCommand, this.createCmdObject(hostname, 'start'))
+        } else if (index == 2) {
+          axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown -r now'))
+        } else if (index == 2) {
+          axios.post(this.urlCommand, this.createCmdObject(hostname, 'sudo shutdown now'))
+        }
       }
     },
     hashrateOver(brand, key) {
@@ -299,18 +308,31 @@ export default {
         this.rigNumber.push(i + 1)
       }
     },
+    convertTime(time){
+      let days
+      let hours = Math.floor(time / 3600000)
+      time = time - hours * 3600000
+      if (hours > 24) {
+        days = Math.floor(hours / 24)
+        hours = (hours - (days * 24))
+      }
+      let minutes = Math.floor(time / 60000)
+      time = time - minutes * 60000
+      let seconds = Math.floor(time / 1000)
+      return (days) ? `${days} days | ${hours}:${minutes}:${seconds}` : `${hours}:${minutes}:${seconds}`
+    },
     rigTimes(response) {
       for (let i = 0; i < response.length; i++) {
         let now = + new Date()
         this.timeDifference[i] = now - response[i]["New Time"]
         if (this.timeDifference[i] < 1 * 120 * 1000) {
           this.rigStatus[i] = true
-          this.rigSeen[i] = "< 30 secs"
+          let time = response[i]["Runtime"]
+          this.runningTime[i] = this.convertTime(time)
         } else {
           this.rigStatus[i] = false
           let time = this.timeDifference[i]
-          time = Math.round(time / 1000 / 60)
-          this.rigSeen[i] = "> " + time + " mins"
+          this.rigSeen[i] = this.convertTime(time)
         }
       }
     },
@@ -419,15 +441,14 @@ export default {
       this.urlDelete = 'https://nos-server.now.sh/rig/delete/'
       this.urlUpdateSession = 'https://nos-server.now.sh/db/updateSession/'
     }
-    axios.post(this.urlGet)
+    axios.get(this.urlLogin)
       .then(res => {
         if (res.data == "not logged in!") this.$router.push('/')
         else {
-          axios.get(this.urlLogin)
-            .then(res => {
-              this.disableSwitch = res.data.rigsState
-              this.rigInfo()
-            })
+            this.disableSwitch = res.data.rigsState
+            this.fakeAccount = res.data.fakeAccount
+            if (this.fakeAccount = 'true') this.fakeAccount = true
+            this.rigInfo()
         }
       })
   },

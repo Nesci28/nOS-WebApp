@@ -95,9 +95,6 @@ export default {
 .imageBorder{
   border: 1px solid white;
 }
-.logoColor{
-  color: rgb(240, 226, 150);
-}
 .textSecond{
   margin-left: 5%;
   margin-right: 5%;
