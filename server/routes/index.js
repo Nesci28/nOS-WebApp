@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  if (req.session.isAuthenticated) {
+  if (req.session.isAuthenticated && req.session.fakeAccount != true) {
     let username = req.session.username.toLowerCase()
     let hostname = req.body.hostname
     if (hostname) {
@@ -22,6 +22,10 @@ router.post('/', async (req, res) => {
     } else {
       var dbRes = await rigsInfo.find({"Username": username})
     }
+    db.close()
+    res.send(dbRes)
+  } else if (req.session.isAuthenticated && req.session.fakeAccount == true) {
+    let dbRes = await rigsInfo.find({"Username": process.env.FAKE_ACCOUNT})
     db.close()
     res.send(dbRes)
   } else {
@@ -53,7 +57,7 @@ router.post('/', async (req, res) => {
         else res.send('Wrong password!')
       }
     }
-  } 
+  }
 });
 
 router.post('/updateSession', async (req, res) => {

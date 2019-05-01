@@ -16,11 +16,21 @@
         @mounted="onMounted"
         >
       </Monaco>
-      <v-btn :class="{'disable-events': fakeAccount}" color="success" @click="deleteCard = !deleteCard">Save</v-btn>
+      <v-btn :class="{'disable-events': fakeAccount}" color="success" @click="checkValidity">Save</v-btn>
       <v-btn color="warning" to="/Rigs">Cancel</v-btn>
 
       <v-flex xs16 sm16 md6 lg6>
-        <v-dialog v-model="deleteCard" width="75%">
+        <v-dialog v-model="errorCard" width="75%">
+          <v-card class="infoCard rounded-card">
+            <v-card-title class="red--text headline lighten-2 cardTitle" primary-title>
+              Error in your JSON
+            </v-card-title>
+          </v-card>      
+        </v-dialog>
+      </v-flex>
+
+      <v-flex xs16 sm16 md6 lg6>
+        <v-dialog v-model="confirmCard" width="75%">
           <v-card class="infoCard rounded-card">
             <v-card-title class="green--text headline lighten-2 cardTitle" primary-title>
             Confirm this new configuration ?
@@ -59,7 +69,8 @@ export default {
         section: ''
       },
       loading: true,
-      deleteCard: false,
+      confirmCard: false,
+      errorCard: false,
       confirmText: '',
       deleteRig: '',
       fakeAccount: true
@@ -80,8 +91,18 @@ export default {
       this.json = JSON.stringify(configs, undefined, 4)
       this.editor.setValue(this.json)
     },
+    checkValidity() {
+      try {
+          JSON.parse(this.editor.getValue());
+      } catch (e) {
+          this.errorCard = !this.errorCard
+          return false;
+      }
+      this.confirmCard = !this.confirmCard
+      return true;
+    },
     async save() {
-      this.deleteCard = !this.deleteCard
+      this.confirmCard = !this.confirmCard
       console.log("Saved!")
       this.res.json = JSON.parse(this.editor.getValue())
       this.res.json.Serial = this.res.json.Serial + 1
@@ -124,7 +145,6 @@ export default {
     this.loading = true
     axios.get(this.urlLogin)
       .then(res => {
-        console.log(res.data)
         this.loading = false
         if (res.data == "not logged in!") this.$router.push('/')
         else {

@@ -34,7 +34,7 @@ router.post('/add', async (req, res) => {
   let dbEntry = await rigsInfo.find({"Username": username, "Hostname": hostname})
   if (dbEntry.length > 0) {
     let entryID = dbEntry[0]._id
-    if (section && req.session.isAuthenticated) {
+    if (section && req.session.isAuthenticated && res.session.fakeAccount != true) {
       dbEntry = objectWithoutKey(dbEntry[0], '_id')
       var updatedEntry = dbEntry
       updatedEntry[section] = req.body.json
@@ -60,7 +60,7 @@ router.post('/add', async (req, res) => {
 
 // Send a command to the RIG
 router.post('/command', async (req, res) => {
-  if (req.session.isAuthenticated) {
+  if (req.session.isAuthenticated && res.session.fakeAccount != true) {
     const username = req.session.username.toLowerCase()
     const hostname = req.body.hostname
     const command = req.body.command
@@ -81,7 +81,7 @@ router.post('/command', async (req, res) => {
 
 // Delete the RIG entry from the DB
 router.post('/delete', async (req, res) => {
-  if (req.session.isAuthenticated) {
+  if (req.session.isAuthenticated && res.session.fakeAccount != true) {
     const username = req.session.username.toLowerCase()
     const hostname = req.body.hostname
     await rigsInfo.remove({"Username": username, "Hostname": hostname})
