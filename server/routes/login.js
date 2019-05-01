@@ -34,7 +34,6 @@ router.post('/login', async (req, res) => {
         req.session.isAuthenticated = true
         req.session.fakeAccount = true
         req.session.rigsState = []
-        console.log(req.session)
         res.send(req.session)
       }
     }
