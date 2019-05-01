@@ -47,8 +47,8 @@ export default {
       this.resData = res.data
       if (res.data == 'not logged in!') {
           let dbEntry = await axios.post(this.urlGet, {
-            username: this.user.login,
-            password: this.user.password
+            username: this.user.login.toString(),
+            password: this.user.password.toString()
           })
           if (dbEntry.data.isAuthenticated) {
             this.$router.push('/rigs')

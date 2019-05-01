@@ -79,7 +79,7 @@
 
       <v-divider></v-divider>
       
-      <v-list-tile v-if="isLoggedIn" to="/" @click="loggedOut">
+      <v-list-tile v-if="isLoggedIn" @click="loggedOut">
         <v-list-tile-content>
           <v-list-tile-title>  
             <v-icon color="rgb(240, 226, 150)">exit_to_app</v-icon>

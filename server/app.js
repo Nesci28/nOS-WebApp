@@ -25,7 +25,7 @@ store.on('error', function(error) {
 });
 
 // Proxy
-app.enable('trust proxy');
+app.enable('trust proxy', 1);
 
 // Cors
 app.use(cors({
@@ -39,21 +39,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 // Express session
-app.use(
-  session({
-    secret: `${process.env.COOKIE_SECRET}`,
-    store: store,
-    cookie: { 
-      maxAge: 1 * 60 * 60 * 24 * 30 * 1000,
-      httpOnly: false,
-      secure: false
-    },
-    resave: true,
-    unset: 'destroy',
-    saveUninitialized: false
-  })
-);
+let sess = {
+  secret: `${process.env.COOKIE_SECRET}`,
+  store: store,
+  cookie: { 
+    expires: (Date.now() + 3600000 * 24 * 30),
+    maxAge: 1 * 60 * 60 * 24 * 30 * 1000,
+    httpOnly: false,
+    secure: true
+  },
+  resave: false,
+  unset: 'destroy',
+  saveUninitialized: false
+}
 
+if (app.get('env') == 'development') {
+  sess.cookie.secure = false
+}
+app.use(session(sess))
 
 // Routes
 app.use('/db', require('./routes/index.js'));
