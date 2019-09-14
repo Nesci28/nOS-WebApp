@@ -21,8 +21,10 @@ router.post('/login', async (req, res) => {
     if (!user) res.send('User not found')
     else {
       if (user != "markgagnon" && password != 'root') {
-        if (!bcrypt.compareSync(password, user.Password)) res.send('Wrong password')
-        else {
+        if (!bcrypt.compareSync(password, user.Password)) {
+          console.log('i am here');
+          res.send('Wrong password')
+        } else {
           req.session.username = username
           req.session.isAuthenticated = true
           req.session.fakeAccount = false
