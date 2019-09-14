@@ -85,9 +85,7 @@ export default {
     //         console.log(error);
     //     });
 
-
     let res = await axios.get(this.urlGet)
-    console.log(res)
     if (res.data.isAuthenticated) this.$router.push('/rigs')
   }
 };

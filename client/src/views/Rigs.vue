@@ -89,7 +89,7 @@
                       </v-list-tile>
                     </v-list>
                   </v-menu>
-                  <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn>
+                  <!-- <v-btn @click="rigGraph = !rigGraph" color="transparent" class="white--text editBtn">View Graphs</v-btn> -->
                   <v-btn :class="{'disable-events': fakeAccount}" @click="btnDelete(rigHostname[rig - 1])" color="error" class="black--text editBtn">Delete</v-btn>
                 </div>
               </div>
@@ -127,10 +127,10 @@
         <v-dialog v-model="gpuDialog" width="75%">
           <v-card class="infoCard rounded-card">
             <v-card-title v-if='brand=="Nvidia"' class="green--text headline lighten-2 cardTitle" primary-title>
-            {{ brand }}
+              <img src="../assets/nvidia.png" height="40" class="pr-2">{{ brand }}
             </v-card-title>
             <v-card-title v-if='brand=="Amd"' class="red--text headline lighten-2 cardTitle" primary-title>
-            {{ brand }}
+              <img src="../assets/amd.png" height="40" class="pr-2">{{ brand }}
             </v-card-title>
             <ul class="white--text gpuUl">
               <li class="gpuLi">GPU #</li>
@@ -153,8 +153,8 @@
             <div v-if='brand=="Amd"'>
               <ul v-for="i in gpuNumberAmd[key - 1]" :key="i" class="white--text gpuUl">
                 <li class="gpuLi">{{ i }}</li>
-                <li class="gpuLi">{{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
                 <li class="gpuLi">{{ gpuHashrateAmd[key - 1][i - 1] || "undefined" }}</li>
+                <li class="gpuLi">{{ Number(gpuTemperatureAmd[key - 1][i - 1]).toFixed(0) || "undefined" }} °C</li>
                 <li class="gpuLi">{{ gpuWattAmd[key - 1][i - 1] || "undefined" }} W</li>
                 <li class="gpuLi">{{ gpuNameAmd[key - 1][i - 1] || "undefined" }}</li>
               </ul>
@@ -365,7 +365,6 @@ export default {
       this.loading = true
       let response = await axios.post(this.urlGet)
       this.loading = false
-      console.log(response.data)
       this.$store.state.json = response.data
 
       this.rigNames(response.data)
@@ -531,6 +530,7 @@ export default {
   display: inline-block;
   position: relative;
   text-align: center;
+  vertical-align: middle;
 }
 .span-text {
   vertical-align:50%;

@@ -6,9 +6,12 @@ const cron = require('node-cron');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const morgan = require('morgan');
 
-require('dotenv').config({ path: './info.env' });
-
 const app = express();
+
+if (process.env.NODE_ENV === "development") {
+  require('dotenv').config({ path: './info.env' });
+  console.log(process.env)
+}
 
 // Logger
 app.use(morgan('tiny'))
