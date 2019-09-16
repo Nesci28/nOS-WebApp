@@ -10,7 +10,7 @@
     "deploy": "npm run build && now --public && now alias node-OS"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.0.0-rc.1",
+    "@babel/polyfill": "^7.6.0",
     "anser": "^1.4.8",
     "axios": "^0.18.0",
     "dns": "^0.2.2",
