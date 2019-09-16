@@ -21,7 +21,7 @@
     "material-design-icons-iconfont": "^4.0.5",
     "module": "^1.2.5",
     "monaco-editor-forvue": "^1.0.3",
-    "monk": "^6.0.6",
+    "monk": "^7.0.0",
     "nodemailer": "^5.1.1",
     "sass-loader": "^7.1.0",
     "serve": "^10.1.2",
