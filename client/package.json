@@ -37,7 +37,7 @@
     "vue-terminal": "^1.0.1-beta",
     "vue-terminal-ui": "^0.1.5",
     "vuetify": "^1.3.0",
-    "vuetify-scss": "^1.3.5",
+    "vuetify-scss": "^1.4.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
