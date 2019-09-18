@@ -58,6 +58,6 @@ export default new Router({
       path: '/aboutMe',
       name: 'aboutMe',
       component: AboutMe,
-    }
+    },
   ],
 });

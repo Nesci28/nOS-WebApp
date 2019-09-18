@@ -4,10 +4,12 @@
 ### Vuejs ###
 # Recommended template: Node.gitignore
 
-node_modules/
+**/node_modules/*
+node_modules
 dist/
 npm-debug.log
 yarn-error.log
+public/
 
 # End of https://www.gitignore.io/api/vuejs
 

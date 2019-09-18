@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "name": "nOS",
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@now/node-server"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "app.js"
+    }
+  ],
+  "alias": ["node-os"],
+  "env": {
+    "PORT": "5000",
+    "DB_USERNAME": "nesci",
+    "DB_PASSWORD": "012Webserver",
+    "DB_URL": "ds153495.mlab.com:53495/webserver",
+    "DB_COLLECTION": "rigsInfo",
+    "DB_SESSION": "sessions",
+    "SENDGRID_API_KEY": "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",
+    "COOKIE_SECRET": "gOV4oPprT86zE9",
+    "FAKE_ACCOUNT": "markgagnon",
+    "PERSONNAL_PASSWORD": "306Fccncgi"
+  }
+}
