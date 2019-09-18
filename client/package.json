@@ -17,7 +17,7 @@
     "express": "^4.16.4",
     "highlight.js": "^9.15.6",
     "http-proxy-middleware": "^0.19.1",
-    "material-design-icons-iconfont": "^4.0.5",
+    "material-design-icons-iconfont": "^5.0.1",
     "module": "^1.2.5",
     "monaco-editor-forvue": "^1.0.3",
     "monk": "^6.0.6",
