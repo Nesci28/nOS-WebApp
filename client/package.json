@@ -15,7 +15,7 @@
     "axios": "^0.18.0",
     "dns": "^0.2.2",
     "express": "^4.16.4",
-    "highlight.js": "^9.15.6",
+    "highlight.js": "^9.15.10",
     "http-proxy-middleware": "^0.19.1",
     "material-design-icons-iconfont": "^4.0.5",
     "module": "^1.2.5",
