@@ -9,8 +9,26 @@ const db = monk(`${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process
 const rigsInfo = db.get(`${process.env.DB_COLLECTION}`);
 
 router.get('/', async (req, res) => {
-  let downloadEntry = await rigsInfo.find({ "_id":"5ca115add362a12eb3e5cead"})
-  res.send(downloadEntry)
+  if (!req.query) {
+    let downloadEntry = await rigsInfo.find({ "_id":"5ca115add362a12eb3e5cead"})
+    res.send(downloadEntry)
+  } else {
+    let { username, password, hostname } = req.query
+    username = username.toLowerCase()
+    if (hostname) {
+      var dbRes = await rigsInfo.findOne({"Username": username, "Hostname": hostname})
+      db.close()
+      if (dbRes) {
+        if (bcrypt.compareSync(password, dbRes.Password)) {
+          res.send(dbRes)
+        } else {
+          res.send('Wrong password!')
+        }
+      } else {
+        res.send('New rig detected!')
+      }
+    }
+  }
 })
 
 router.post('/', async (req, res) => {
