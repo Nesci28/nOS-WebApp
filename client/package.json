@@ -21,7 +21,7 @@
     "module": "^1.2.5",
     "monaco-editor-forvue": "^1.0.3",
     "monk": "^6.0.6",
-    "nodemailer": "^5.1.1",
+    "nodemailer": "^6.4.16",
     "sass-loader": "^7.1.0",
     "serve": "^10.1.2",
     "vue": "^2.6.6",
